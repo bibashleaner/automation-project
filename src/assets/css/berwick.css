@@ -22,3 +22,48 @@
     color: white;
     border-radius: 8px;
 }
+
+/* .preview-image{
+    z-index: 1;
+    position: relative;
+    opacity: 60%;
+}
+
+.overlay-timelogo{
+    z-index: 2;
+    position: absolute;
+    
+} */
+
+/* .image-container{
+    position: relative;
+}
+
+.overlay{
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding-left: 100px;
+    padding-right: 100px;
+} */
+
+.preview-image{
+    position: relative;
+    z-index: 1;
+}
+
+.captionText{
+    position: absolute;
+    text-align: center;
+    color: green;
+    font: 1em;
+    /* bottom: 5rem; */x: ;
+    transform: translateY(-300%);
+    z-index: 2;
+    left: 12rem;
+}
