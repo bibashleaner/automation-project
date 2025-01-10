@@ -1,69 +1,41 @@
-.home-button{
-    margin-left: 30rem;
-    margin-top: 10rem;
-    font-weight: bold;
-    font-size: 2rem;
-    margin-bottom: 21.22rem;
-}
 
-.berwick-button{
-    padding: 5px 55px 5px 55px;
-    text-decoration: none;
-    background-color: #758bfd;
-    color: white;
-    border-radius: 8px;
-}
-
-.cranbourne-button{
-    margin-left: 20px;
-    text-decoration: none;
-    padding: 5px 15px 5px 15px;
-    background-color: #758bfd;
-    color: white;
-    border-radius: 8px;
-}
-
-/* .preview-image{
-    z-index: 1;
-    position: relative;
-    opacity: 60%;
-}
-
-.overlay-timelogo{
-    z-index: 2;
-    position: absolute;
-    
-} */
-
-/* .image-container{
-    position: relative;
-}
-
-.overlay{
-    position: absolute;
-    top: 0;
+.uploaded-file-list{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    text-align: center;
-    padding-left: 100px;
-    padding-right: 100px;
-} */
-
-.preview-image{
-    position: relative;
-    z-index: 1;
+    gap: 20px;
 }
 
-.captionText{
-    position: absolute;
-    text-align: center;
-    color: green;
-    font: 1em;
-    /* bottom: 5rem; */x: ;
-    transform: translateY(-300%);
-    z-index: 2;
-    left: 12rem;
+.file-preview{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.file-preview img{
+    width: 25%;
+    max-width: 500px;
+    height: 10%;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    gap: 4rem;
+    margin-left: 5rem;
+}
+
+.download-double-button{
+    margin-left: 60rem;
+}
+
+.download-single-button{
+    margin-left: 20rem;
+}
+
+.image-container textarea{
+    margin-left: 5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

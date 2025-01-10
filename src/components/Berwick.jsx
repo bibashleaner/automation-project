@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import times from '../assets/pictures/times.png';
-// import ImageWithOverlay from "./ImageWithOverlay";
+// import times from '../assets/pictures/times.png';
 import '../assets/css/berwick.css';
-// import { preview } from "vite";
+import { CropImage } from "./Crop";
 
 export const Berwick = () =>{
     const [uploadFiles, setUploadFiles] = useState([]);
+    const [currentImage, setCurrentImage] = useState(null);
     
     const handleUploadFiles = (files) => {
         const uploaded = [...uploadFiles];
@@ -40,17 +40,42 @@ export const Berwick = () =>{
         );
         setUploadFiles(updatedFiles);
     };
-    
+
+    const handleCropClick = (file) =>{
+        setCurrentImage(file);  //set the selected image for cropping
+    }
+
+    const handleCropDone = (croppedImage) => {
+        const updatedFiles = uploadFiles.map((file) =>
+          file.name === currentImage.name
+            ? { ...file, preview: croppedImage }
+            : file
+        );
+        setUploadFiles(updatedFiles); // Update the cropped image in the list
+        setCurrentImage(null); // Reset currentImage after cropping
+      };
+
+      if(currentImage){
+        return (
+            <CropImage 
+                imageSrc={currentImage.preview}
+                onCropDone={handleCropDone}
+            />
+        );
+      }
 
     return (
         <>
         <h2>Add Image</h2>
+
         <input 
             id="fileuploaded"
             type="file" 
             multiple
             onChange={handleFileEvent} 
         />
+
+        <button className="download-double-button">Download All</button>
 
         {/* preview */}
         <div className="uploaded-file-list">
@@ -61,39 +86,41 @@ export const Berwick = () =>{
                         <img
                             src={file.preview}
                             alt={file.name}
-                            className="preview-image"
                         />
-                        <div className="captionText">
+                        <textarea
+                            placeholder="Enter the caption"
+                            value={file.caption}
+                            onChange={(e) => handleCaptionChange(index, e.target.value)}
+                            rows="5"
+                            cols="30"
+                        />
+
+                        <button className="download-single-button">Download</button>
+
+
+                        {/* <div className="captionText">
                             {file.caption}
-                        </div>
+                        </div> */}
+
                     </div>
-                    <div className="overlay">
+
+                    {/* <div className="overlay">
                         <img
                             src={times}
                             alt="logo"
                             className="overlay-timelogo"
                         ></img>
                         <div className="overlay-text">{file.defaultText}</div>
-                    </div>
+                    </div> */}
 
                     {/* <ImageWithOverlay imageSrc={file.preview} caption={file.caption} /> */}
-                    <textarea
-                        placeholder="Enter caption here"
-                        value={file.caption}
-                        onChange={(e) => handleCaptionChange(index, e.target.value)}
-                    />
-                    <button>Preview</button>
+                    <div className="buttons">
+                        <button>Preview</button>      {/*if click in the image it will show the image */}
+                        <button onClick={() => handleCropClick(file)}>Crop</button>
+                    </div>
                 </div>
             ))}
         </div>
-
-        {/* <h2>Add Caption</h2>
-        <textarea
-            rows={5}
-            cols={30}
-        ></textarea> */}
-
-
         </>
     );
 }

@@ -1,0 +1,27 @@
+.container {
+    position: relative;
+  }
+
+  .button{
+    z-index: 2;
+    cursor: pointer;
+    margin-bottom: 2rem;
+  }
+  
+  .cropped-image {
+    height: 600px;
+    width: auto;
+  }
+  
+  .cropped-image-container {
+    margin-top: 10rem;
+    /* display: flex; */
+    /* flex-direction: column; */
+  }
+  
+  
+  .crop-container {
+    margin-top: 4rem;
+    height: 200px;
+    width: 20px;
+  }

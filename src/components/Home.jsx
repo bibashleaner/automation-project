@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import '../assets/css/berwick.css';
+import '../assets/css/home.css';
 
 export const Home = () =>{
 
