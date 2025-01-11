@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 // import times from '../assets/pictures/times.png';
 import '../assets/css/berwick.css';
 import { CropImage } from "./Crop";
+import { OverlayLogic } from "./overlay";
 
 export const Berwick = () =>{
     const [uploadFiles, setUploadFiles] = useState([]);
     const [currentImage, setCurrentImage] = useState(null);
+
+    const singleDownloadRef = useRef(null);
+    const downloadAllRef = useRef(null);
     
     const handleUploadFiles = (files) => {
         const uploaded = [...uploadFiles];
@@ -55,6 +59,14 @@ export const Berwick = () =>{
         setCurrentImage(null); // Reset currentImage after cropping
       };
 
+      const handleSingleDownloadRef = (func) =>{
+        singleDownloadRef.current = func;
+      };
+
+      const handleDownloadAllRef = (func) =>{
+        downloadAllRef.current = func;
+      };
+
       if(currentImage){
         return (
             <CropImage 
@@ -75,7 +87,10 @@ export const Berwick = () =>{
             onChange={handleFileEvent} 
         />
 
-        <button className="download-double-button">Download All</button>
+        <button 
+            className="download-double-button"
+            onClick={() => downloadAllRef.current && downloadAllRef.current()}
+        >Download All</button>
 
         {/* preview */}
         <div className="uploaded-file-list">
@@ -95,12 +110,15 @@ export const Berwick = () =>{
                             cols="30"
                         />
 
-                        <button className="download-single-button">Download</button>
+                        <button 
+                            className="download-single-button"
+                            onClick={() => singleDownloadRef.current && singleDownloadRef.current(file)}
+                        >Download</button>
 
 
-                        {/* <div className="captionText">
+                        <div className="captionText">
                             {file.caption}
-                        </div> */}
+                        </div>
 
                     </div>
 
@@ -121,6 +139,11 @@ export const Berwick = () =>{
                 </div>
             ))}
         </div>
+        <OverlayLogic 
+            files={uploadFiles}
+            onSingleDownload={handleSingleDownloadRef}
+            onDownloadAll={handleDownloadAllRef}
+        />
         </>
     );
 }
