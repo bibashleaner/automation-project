@@ -17,7 +17,6 @@ export const CropImage = ({imageSrc, onCropDone}) =>{
         try{
             console.log(imageSrc);
             const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-            // setCroppedImage(croppedImage);
             onCropDone(croppedImage); //pass cropped image back to berwick
         }catch(e){
             console.error(e);
@@ -41,7 +40,7 @@ export const CropImage = ({imageSrc, onCropDone}) =>{
                     image = {imageSrc}
                     crop = {crop}
                     zoom = {zoom}
-                    aspect={4/3}
+                    aspect={1}  //1:1 ratio
                     onCropChange={setCrop}
                     onCropComplete={onCropComplete}
                     onZoomChange={setZoom}

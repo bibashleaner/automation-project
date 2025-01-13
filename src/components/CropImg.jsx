@@ -53,7 +53,7 @@ export const createImage = (url) =>
             reject(new Error("canvas is empty"));
             console.log(Error);
         }
-      }, "image/jpeg");
+      }, "image/jpeg", 1.0); //image format and image quality
     });
   }
   

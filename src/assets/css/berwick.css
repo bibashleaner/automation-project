@@ -1,3 +1,9 @@
+@font-face {
+    font-family: "CustomFont";
+    src: url('/src/fonts/DMSerifText.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
 
 .uploaded-file-list{
     display: flex;
@@ -17,6 +23,7 @@
     height: 10%;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* background-color: rgba(0, 0, 0, var(--overlay-opacity)); */
 }
 
 .buttons{
