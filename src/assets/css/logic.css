@@ -1,6 +1,13 @@
 @font-face {
-    font-family: "CustomFont";
+    font-family: "CaptionFont";
     src: url('/src/fonts/DMSerifText.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "DefaultFont";
+    src: url('/src/fonts/Kanit-Regular.ttf');
     font-weight: normal;
     font-style: normal;
 }

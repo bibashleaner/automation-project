@@ -10,6 +10,7 @@ export const Berwick = () => {
             type="Berwick"
             logo={timesLogo}
             defaultText="TIMES BERWICK"
+            // defaultText="The quick"
         />
         </>
     );

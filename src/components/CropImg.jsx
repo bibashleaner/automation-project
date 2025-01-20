@@ -10,7 +10,8 @@ export const createImage = (url) =>
   export async function getCroppedImg(
     imageSrc,
     pixelCrop,
-    flip = { horizontal: false, vertical: false }
+    flip = { horizontal: false, vertical: false },
+    maxFileSizeMB = 8
   ) {
     const image = await createImage(imageSrc);
     const canvas = document.createElement("canvas");
@@ -44,16 +45,40 @@ export const createImage = (url) =>
       pixelCrop.height
     );
   
-    return new Promise((resolve, reject) => {
-      canvas.toBlob((file) => {
-        if(file){
-            resolve(URL.createObjectURL(file));
-            console.log(file);
-        }else{
-            reject(new Error("canvas is empty"));
-            console.log(Error);
-        }
-      }, "image/jpeg", 0.5); //image format and image quality
-    });
-  }
+    // return new Promise((resolve, reject) => {
+    //   canvas.toBlob((file) => {
+    //     if(file){
+    //         resolve(URL.createObjectURL(file));
+    //         console.log(file);
+    //     }else{
+    //         reject(new Error("canvas is empty"));
+    //         console.log(Error);
+    //     }
+    //   }, "image/jpeg", 0.2); //image format and image quality
+    // });
+
+     // Compress and enforce file size
+     const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
+     let quality = 0.9; // Start with high quality
+     let blob = null;
+ 
+     do {
+         blob = await new Promise((resolve) => {
+             canvas.toBlob((file) => resolve(file), "image/jpeg", quality);
+         });
+ 
+         if (blob.size > maxFileSizeBytes) {
+             quality -= 0.1; // Reduce quality incrementally
+         }
+     } while (blob.size > maxFileSizeBytes && quality > 0.1); // Stop when size is below limit or quality is too low
+ 
+     if (!blob) {
+         throw new Error("Failed to create image blob.");
+     }
+ 
+     // Return the image URL for the cropped file
+     return URL.createObjectURL(blob);
+
+ }
+
   

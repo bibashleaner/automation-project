@@ -11,7 +11,8 @@ export const Logic = ({type, logo, defaultText}) => {
     // const debounceTimeouts = useRef({});
     // const captionRenderedRef = useRef({});
 
-    const fontLoaded = new FontFace("CustomFont", "url('/src/fonts/DMSerifText.ttf')");
+    const captionFontLoaded = new FontFace("CaptionFont", "url('/src/fonts/DMSerifText.ttf')");
+    const defaulFontLoaded = new FontFace("DefaultFont", "url('/src/fonts/Kanit-Regular.ttf')")
 
     const handleUploadFiles = (files) => {
         const uploaded = [...uploadFiles];
@@ -67,18 +68,36 @@ export const Logic = ({type, logo, defaultText}) => {
         const image = new Image();
         image.src = file.preview;
 
+        canvas.width = 1080;
+        canvas.height = 1080;
+
         return new Promise((resolve) => {
             image.onload = () => {
                 //set canvas dimension to match the image
                 // canvas.width = image.width;
                 // canvas.height = image.height;
-                canvas.width = 1080;
-                canvas.height = 1080;
+                
+                const aspectRatio = image.width / image.height;
+                let drawWidth, drawHeight, offsetX, offsetY;
+
+                if (aspectRatio > 1) {
+                    // Landscape orientation
+                    drawWidth = canvas.width;
+                    drawHeight = canvas.width / aspectRatio;
+                    offsetX = 0;
+                    offsetY = (canvas.height - drawHeight) / 2;
+                } else {
+                    // Portrait orientation or square
+                    drawWidth = canvas.height * aspectRatio;
+                    drawHeight = canvas.height;
+                    offsetX = (canvas.width - drawWidth) / 2;
+                    offsetY = 0;
+                }
 
                 context.clearRect(0, 0, canvas.width, canvas.height); //clear canvas
 
                 //Draw the main image
-                context.drawImage(image, 0, 0);
+                context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
 
                 //add black overlay with 50% opacity
                 context.fillStyle = `rgba(0, 0, 0, 0.5)`;
@@ -91,23 +110,29 @@ export const Logic = ({type, logo, defaultText}) => {
                 // const logoX = (canvas.width - logoWidth) / 2; //center logo
                 // const logoY = logoMargin;
 
-                const logoWidth = 134;
-                const logoHeight = 182;
+                // const logoWidth = 134;
+                // const logoHeight = 182;
 
-                const logoMarginTop = 40;
-                const logoMarginLeft = 474.87;
-                const logoY = logoMarginTop;
-                const logoX = logoMarginLeft;
+                // const logoMarginTop = 40;
+                // // const logoMarginLeft = 474.87;
+                // const logoY = logoMarginTop;
+                // const logoX = (canvas.width - image.width) / 2;
 
                 const logoImage = new Image();
                 logoImage.src = logo;
+
                 logoImage.onload = () => {
                     //draw the logo
+                    const logoWidth = 134;
+                    const logoHeight = 182;
+                    const logoY = 40; //logoMarginTop
+                    const logoX = 474.87; //logoMarginLeft
                     context.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
+                    // console.log(logoWidth, logoHeight);
                     
                     //add default text
-                    const defaultFontSize = Math.max(18, Math.floor(image.width * 0.022)); //scale with the image width
-                    context.font = `${defaultFontSize}px CustomFont`;
+                    const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.022)); //scale with the image width
+                    context.font = `${defaultFontSize}px DefaultFont`;
                     context.fillStyle = "white";
                     context.textAlign = "center";
 
@@ -117,8 +142,8 @@ export const Logic = ({type, logo, defaultText}) => {
                     //add the caption
                     if (file.caption && file.caption.trim() !== "") {
 
-                        const captionFontSize = Math.max(20, Math.floor(image.width * 0.070)); //scale with image size
-                        context.font = `${captionFontSize}px CustomFont`;
+                        const captionFontSize = Math.max(20, Math.floor(canvas.width * 0.070)); //scale with image size
+                        context.font = `${captionFontSize}px CaptionFont`;
                         context.fillStyle = "white";
                         context.textAlign = "center";
 
