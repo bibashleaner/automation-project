@@ -1,3 +1,9 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 @font-face {
     font-family: "CaptionFont";
     src: url('/src/fonts/DMSerifText.ttf');
@@ -12,22 +18,48 @@
     font-style: normal;
 }
 
+h2{
+    text-align: center;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    font-size: 2rem;
+    
+}
+
 .uploaded-file-list{
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    /* gap: 20px; */
 }
 
 .file-preview{
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    /* gap: 10px; */
+    background-color: #EEEEEE;
+    align-items: center;
+    margin-left: 10rem;
+    margin-right: 10rem;
 }
 
-.file-preview img{
-    width: 25%;
-    max-width: 500px;
-    height: 10%;
+.preview-image-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 6rem;
+    /* margin-top: 3rem; */
+    margin-left: 2rem;
+    margin-right: 2rem;
+    padding: 0;
+}
+
+.preview-image-container img{
+    /* margin-top: 5rem; */
+    /* width: 25%;
+    max-width: 1000px;
+    height: 100%; */
+    height: 18rem;
+    width: 15rem;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     /* background-color: rgba(0, 0, 0, var(--overlay-opacity)); */
@@ -35,21 +67,102 @@
 
 .buttons{
     display: flex;
-    flex-direction: row;
     gap: 4rem;
-    margin-left: 5rem;
+    color: white;
+    margin-top: 2rem;
+    color: white;
+    align-items: flex-end;
+}
+
+.image-container textarea{
+    display: flex;
+    align-items: flex-end;
 }
 
 .download-double-button{
-    margin-left: 60rem;
+    display: flex;
+    flex-direction: row;
+    margin-top: 2rem;
+    margin-left: 85rem;
+    padding: 15px 10px 15px 10px;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    background-color: #007BFF;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.download-double-button-icon, .download-icon, .preview-icon, .croped-icon{
+    color: white;
+    height: 1rem;
+    width: 1rem;
 }
 
 .download-single-button{
-    margin-left: 20rem;
+    display: flex;
+    flex-direction: row;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 25px;
+    padding: 13px 25px 13px 25px;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.preview-btn{
+    display: flex;
+    flex-direction: row;
+    background-color: #EEEEEE;
+    border-radius: 25px;
+    padding: 13px 25px 13px 25px;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.crop-btn{
+    display: flex;
+    flex-direction: row;
+    background-color: #FFA726;
+    border: none;
+    border-radius: 25px;
+    padding: 13px 25px 13px 25px;
+    gap: 0.5rem;
+    cursor: pointer;
 }
 
 .image-container textarea{
     margin-left: 5rem;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.uploadArea{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+ 
+
+.uploadArea img{
+    height: 4rem;
+    width: 6rem;
+    margin-bottom: 3rem;
+}
+
+.uploadArea button{
+    color: white;
+    background-color: #28A745;
+    padding: 10px 35px 10px 35px;
+    border-radius: 12px;
+    border: 0;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.image-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }

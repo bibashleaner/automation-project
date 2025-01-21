@@ -2,7 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import "../assets/css/logic.css";
 import { CropImage } from "./Crop";
 // import timesLogo from "../assets/pictures/timesLogo.png";
-import { wrapText } from "./TextHelper"; 
+import { wrapText } from "./TextHelper"
+import upload from '../icons/upload.png'
+import croped from '../icons/croped.png'
+import uploaded from '../icons/uploaded.png'
+import download from '../icons/download.png'
+import view from '../icons/view.png'
 
 export const Logic = ({type, logo, defaultText}) => {
     const [uploadFiles, setUploadFiles] = useState([]);
@@ -26,6 +31,7 @@ export const Logic = ({type, logo, defaultText}) => {
                         caption: " ",
                         captionRendered: false,
                         previewWithOverlay: null,
+                        rendering: false,
                     });
                     setUploadFiles([...uploaded]);
                 };
@@ -41,10 +47,23 @@ export const Logic = ({type, logo, defaultText}) => {
 
     const handleCaptionChange = async(index, caption) => {
 
-        const updatedFiles = uploadFiles.map((file, i) =>
-            i === index ? { ...file, caption} : file
-        );
+        // const updatedFiles = uploadFiles.map((file, i) =>
+        //     i === index ? { ...file, caption} : file
+        // );
+        // setUploadFiles(updatedFiles);
+        const updatedFiles = [...uploadFiles];
+        const file = updatedFiles[index];
+    
+        file.caption = caption;
+        file.rendering = true; // Mark as rendering
         setUploadFiles(updatedFiles);
+
+        const overlayedImage = await createImageWithOverlay(file);
+        file.previewWithOverlay = overlayedImage;
+        file.captionRendered = true;
+        file.rendering = false; // Mark as rendering complete
+
+        setUploadFiles([...updatedFiles]); // Update state
     };
 
     const handleCropClick = (file) => {
@@ -125,6 +144,8 @@ export const Logic = ({type, logo, defaultText}) => {
                     //draw the logo
                     const logoWidth = 134;
                     const logoHeight = 182;
+                    // const logoWidth = Math.min(image.width * 0.3, 1000); // 10% of image width
+                    // const logoHeight = Math.min(image.height * 0.3, 1000); 
                     const logoY = 40; //logoMarginTop
                     const logoX = 474.87; //logoMarginLeft
                     context.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
@@ -157,10 +178,9 @@ export const Logic = ({type, logo, defaultText}) => {
                         // Draw each line of the wrapped text
                         let currentY = captionY - (wrappedLines.length - 1) * (captionFontSize + 5);
                         for (const line of wrappedLines) {
-                            context.fillText(line, canvas.width / 2, currentY);
+                            context.fillText(line, canvas.width / 2, currentY); 
                             currentY += captionFontSize + 5; // Line height
                         }
-
                         resolve(canvas.toDataURL("image/png"));
                         console.log(wrappedLines);
                     }
@@ -207,11 +227,28 @@ export const Logic = ({type, logo, defaultText}) => {
 
     //function to download single image
     const handleSingleDownload = async (file) => {
+        // const overlayedImage = await createImageWithOverlay(file);
+        // const link = document.createElement("a");
+        // link.download = `${file.name}`;
+        // link.href = overlayedImage;
+        // link.click();
+
+        const updatedFiles = uploadFiles.map((f) =>
+            f.name === file.name ? { ...f, rendering: true } : f
+        );
+        setUploadFiles(updatedFiles);
+    
         const overlayedImage = await createImageWithOverlay(file);
+    
         const link = document.createElement("a");
         link.download = `${file.name}`;
         link.href = overlayedImage;
         link.click();
+    
+        const updatedFilesComplete = updatedFiles.map((f) =>
+            f.name === file.name ? { ...f, rendering: false } : f
+        );
+        setUploadFiles(updatedFilesComplete);
     };
 
     //function to download all image at once
@@ -236,23 +273,44 @@ export const Logic = ({type, logo, defaultText}) => {
 
     return (
         <>
+            {uploadFiles.length === 0 ? (
+            <>
+                <h2>Upload Files</h2>
+                <div className="uploadArea">
+                    <img src={upload} alt="upload" />
+                    <h3>Drag and Drop here</h3>
+                    <h3>or</h3>
+                    <button onClick={() => document.getElementById("fileuploaded").click()}>
+                        select files
+                    </button>
+                    <input id="fileuploaded" type="file" style={{display: "none"}} multiple onChange={handleFileEvent} />
+                </div>
+            </>
+
+            ) : (
+            
+            <div className="uploaded-file-list">
             <h2>Add Image</h2>
-            <input id="fileuploaded" type="file" multiple onChange={handleFileEvent} />
             <button
                 className="download-double-button"
                 onClick={handleDownloadAll}
             >
+                <img src={download} alt="donwload icon" className="download-double-button-icon"/>
                 Download All
             </button>
-            <div className="uploaded-file-list">
                 {uploadFiles.map((file, index) => (
                     <div key={index} className="file-preview">
-                        <p>{file.name}</p>
+
+                        <div className="preview-image-container">
+                            <p>{file.name}</p>
+                                <img
+                                    src={file.previewWithOverlay || file.preview}
+                                    alt={file.name}
+                                    className={file.rendering ? "rendering" : ""}
+                                />
+                        </div>
+
                         <div className="image-container">
-                            <img
-                                src={overlayedFiles[index]?.previewWithOverlay || file.preview}
-                                alt={file.name}
-                            />
                             <textarea
                                 placeholder="Enter the caption"
                                 defaultValue={file.caption}
@@ -261,20 +319,26 @@ export const Logic = ({type, logo, defaultText}) => {
                                 cols="30"
                                 onKeyDown={(e) => handleKeyPress(e, index)}    
                             />
+                        <div className="buttons">
                             <button
                                 className="download-single-button"
                                 onClick={() => handleSingleDownload(file)}
-                            >
+                                >
+                                <img src={download} className="download-icon"/>
                                 Download
                             </button>
+                            <button className="preview-btn">
+                                <img src={view} className="preview-icon"/>
+                                Preview</button>
+                            <button onClick={() => handleCropClick(file)} className="crop-btn">
+                                <img src={croped} className="croped-icon"/>   
+                                Crop</button>
                         </div>
-                        <div className="buttons">
-                            <button>Show Image</button>
-                            <button onClick={() => handleCropClick(file)}>Crop</button>
-                        </div>
+                                </div>
                     </div>
                 ))}
             </div>
+            )}
         </>
     );
 };

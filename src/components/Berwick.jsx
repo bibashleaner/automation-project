@@ -1,11 +1,14 @@
 import React from "react";
 import { Logic } from "./Logic";
 import timesLogo from '../assets/pictures/timesLogo.png'
+import '../assets/css/berwick.css'
 
 export const Berwick = () => {
     return (
         <>
-        <h1>Welcome to Times Berwick</h1>
+        <div className="header">
+            <h1>Times Berwick</h1>
+        </div>
         <Logic
             type="Berwick"
             logo={timesLogo}

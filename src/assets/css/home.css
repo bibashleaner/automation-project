@@ -1,5 +1,5 @@
 .home-button{
-    margin-left: 30rem;
+    margin-left: 28rem;
     margin-top: 10rem;
     font-weight: bold;
     font-size: 2rem;
@@ -7,18 +7,91 @@
 }
 
 .berwick-button{
-    padding: 5px 55px 5px 55px;
+    text-align: center;
+    align-content: center;
+    padding: 20px 90px 20px 90px;
     text-decoration: none;
-    background-color: #758bfd;
-    color: white;
-    border-radius: 8px;
+    background-color: #BE4D1B;
+    color: black;
+    border-radius: 27px;
+    /* max-width: 140px; */
 }
 
 .cranbourne-button{
-    margin-left: 20px;
+/* align-items: center; */
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    margin-left: 5%;
     text-decoration: none;
-    padding: 5px 15px 5px 15px;
-    background-color: #758bfd;
-    color: white;
-    border-radius: 8px;
+    padding: 20px 65px 20px 65px;
+    background-color: #F5E9E5;
+    color: black;
+    border-radius: 27px;
+    /* max-width: 140px; */
+}
+
+.head{
+    margin-left: 18%;
+    margin-bottom: 10%;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .home-button {
+        margin-left: 3%;
+        margin-top: 8%;
+        font-size: 1.5rem;
+        margin-bottom: 15%;
+    }
+
+    .berwick-button,
+    .cranbourne-button {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        border-radius: 15px;
+    }
+
+    .cranbourne-button {
+        margin-left: 0.5rem;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .head{
+        margin-left: 18%;
+        margin-bottom: 10%;
+        font-weight: bold;
+        font-size: 3rem;
+        margin-right: 4rem;
+    }
+    .home-button {
+        /* margin-left: 2%; */
+        margin-top: 50%;
+        font-size: 1.1rem;
+        margin-bottom: 10%;
+        display: flex;
+        flex-direction:column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .berwick-button,
+    .cranbourne-button {
+        display: flex;
+        /* flex-direction: row; */
+        /* align-content: center; */
+        /* text-align: center; */
+        /* justify-items:center; */
+        font-size: 0.9rem;
+        border-radius: 12px;
+        font-size: 2rem;
+        width: 13rem;
+        border-radius: 25px;
+    }
+
+    .cranbourne-button {
+        margin-top: 2rem;
+    }
 }

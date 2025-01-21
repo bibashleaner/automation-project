@@ -29,11 +29,6 @@ export const CropImage = ({imageSrc, onCropDone}) =>{
 
     return (
         <>
-        <button
-            style={{display: imageSrc === null || croppedImage !== null ? "none" : "block",}}
-            onClick={handleCropSave}
-        >Crop-Done</button>
-
         <div className="container" style={{display: imageSrc === null || croppedImage !== null ? "none" : "block",}}>  
             <div className="crop-container">
                 <Cropper
@@ -47,12 +42,16 @@ export const CropImage = ({imageSrc, onCropDone}) =>{
                 />
             </div>
         </div>
+            <button className="done-btn"
+                style={{display: imageSrc === null || croppedImage !== null ? "none" : "block",}}
+                onClick={handleCropSave}
+            >Done</button>
+
 
         <div className="cropped-image-container">
             {croppedImage && (
                 <img className="cropped-image" src={croppedImage} alt="cropped" />
             )}
-            {croppedImage && <button onClick={onClose}>close</button>}
         </div>
 
         </>
