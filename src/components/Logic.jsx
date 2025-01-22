@@ -290,24 +290,25 @@ export const Logic = ({type, logo, defaultText}) => {
             ) : (
             
             <div className="uploaded-file-list">
-            <h2>Add Image</h2>
-            <button
-                className="download-double-button"
-                onClick={handleDownloadAll}
-            >
-                <img src={download} alt="donwload icon" className="download-double-button-icon"/>
-                Download All
-            </button>
+                <div className="sub-header">
+                    <h2>Add Image</h2>
+                    <button
+                        className="download-double-button"
+                        onClick={handleDownloadAll}
+                    >
+                        <img src={download} alt="donwload icon" className="download-double-button-icon"/>
+                        Download All
+                    </button>
+                </div>
                 {uploadFiles.map((file, index) => (
                     <div key={index} className="file-preview">
 
                         <div className="preview-image-container">
-                            {/* <p>{file.name}</p> */}
-                                <img
-                                    src={file.previewWithOverlay || file.preview}
-                                    alt={file.name}
-                                    className={file.rendering ? "rendering" : ""}
-                                />
+                            <img
+                                src={file.previewWithOverlay || file.preview}
+                                alt={file.name}
+                                className={file.rendering ? "rendering" : ""}
+                            />
                         </div>
 
                         <div className="image-container">
@@ -316,8 +317,8 @@ export const Logic = ({type, logo, defaultText}) => {
                                 placeholder="Enter the caption"
                                 defaultValue={file.caption}
                                 onChange={(e) => handleCaptionChange(index, e.target.value)}
-                                rows="10"
-                                cols="60"
+                                rows="15"
+                                cols="100"
                                 onKeyDown={(e) => handleKeyPress(e, index)}    
                             />
                         <div className="buttons">
@@ -335,7 +336,7 @@ export const Logic = ({type, logo, defaultText}) => {
                                 Download
                             </button>
                         </div>
-                                </div>
+                        </div>
                     </div>
                 ))}
             </div>
