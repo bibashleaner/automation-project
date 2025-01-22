@@ -9,3 +9,5 @@ Currently, two official plugins are available:
 # ImageEditor
 # times-social-media-automation
 # times-social-media-automation
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8165c5e1-5607-4651-8904-80652b411dc0/deploy-status)](https://app.netlify.com/sites/times-automation/deploys)
