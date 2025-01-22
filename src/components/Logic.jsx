@@ -142,12 +142,12 @@ export const Logic = ({type, logo, defaultText}) => {
 
                 logoImage.onload = () => {
                     //draw the logo
-                    const logoWidth = 134;
-                    const logoHeight = 182;
+                    const logoWidth = 250;  //134
+                    const logoHeight = 220;
                     // const logoWidth = Math.min(image.width * 0.3, 1000); // 10% of image width
                     // const logoHeight = Math.min(image.height * 0.3, 1000); 
                     const logoY = 40; //logoMarginTop
-                    const logoX = 474.87; //logoMarginLeft
+                    const logoX = 430; //logoMarginLeft 474.87
                     context.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
                     // console.log(logoWidth, logoHeight);
                     
@@ -317,8 +317,8 @@ export const Logic = ({type, logo, defaultText}) => {
                                 placeholder="Enter the caption"
                                 defaultValue={file.caption}
                                 onChange={(e) => handleCaptionChange(index, e.target.value)}
-                                rows="15"
-                                cols="100"
+                                // rows="15"
+                                // cols="100"
                                 onKeyDown={(e) => handleKeyPress(e, index)}    
                             />
                         <div className="buttons">
