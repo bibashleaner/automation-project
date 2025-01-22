@@ -18,7 +18,7 @@
     font-style: normal;
 }
 
-h2{
+.upload-text h2{
     text-align: center;
     margin-top: 4rem;
     margin-bottom: 4rem;
@@ -29,7 +29,13 @@ h2{
 .uploaded-file-list{
     display: flex;
     flex-direction: column;
-    /* gap: 20px; */
+    gap: 50px;
+    padding: 20px;
+}
+
+h2{
+    margin-top: 1rem;
+    margin-left: 9rem;
 }
 
 .file-preview{
@@ -38,8 +44,9 @@ h2{
     /* gap: 10px; */
     background-color: #EEEEEE;
     align-items: center;
-    margin-left: 10rem;
-    margin-right: 10rem;
+    margin-left: 145px;
+    margin-right: 145px;
+    border-radius: 25px;
 }
 
 .preview-image-container{
@@ -47,22 +54,17 @@ h2{
     flex-direction: column;
     align-items: flex-end;
     margin-bottom: 6rem;
-    /* margin-top: 3rem; */
+    margin-top: 3rem;
     margin-left: 2rem;
     margin-right: 2rem;
     padding: 0;
 }
 
 .preview-image-container img{
-    /* margin-top: 5rem; */
-    /* width: 25%;
-    max-width: 1000px;
-    height: 100%; */
-    height: 18rem;
+    height: 25rem;
     width: 15rem;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* background-color: rgba(0, 0, 0, var(--overlay-opacity)); */
 }
 
 .buttons{
@@ -82,15 +84,15 @@ h2{
 .download-double-button{
     display: flex;
     flex-direction: row;
-    margin-top: 2rem;
-    margin-left: 85rem;
+    margin-top: 0.5rem;
+    margin-left: 81rem;
     padding: 15px 10px 15px 10px;
     border: none;
     border-radius: 25px;
     color: white;
     background-color: #007BFF;
     gap: 0.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .download-double-button-icon, .download-icon, .preview-icon, .croped-icon{

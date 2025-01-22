@@ -1,8 +1,14 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 .header{
     text-align: center;
     color: black;
     background-color: #BE4D1B;
     padding: 1%;
-    font-size: 1.1rem;
+    font-size: 100%;
 }
 

@@ -275,7 +275,7 @@ export const Logic = ({type, logo, defaultText}) => {
         <>
             {uploadFiles.length === 0 ? (
             <>
-                <h2>Upload Files</h2>
+                <h2 className="upload-text">Upload Files</h2>
                 <div className="uploadArea">
                     <img src={upload} alt="upload" />
                     <h3>Drag and Drop here</h3>
@@ -302,7 +302,7 @@ export const Logic = ({type, logo, defaultText}) => {
                     <div key={index} className="file-preview">
 
                         <div className="preview-image-container">
-                            <p>{file.name}</p>
+                            {/* <p>{file.name}</p> */}
                                 <img
                                     src={file.previewWithOverlay || file.preview}
                                     alt={file.name}
@@ -311,15 +311,22 @@ export const Logic = ({type, logo, defaultText}) => {
                         </div>
 
                         <div className="image-container">
+                            <h1>Caption:</h1>
                             <textarea
                                 placeholder="Enter the caption"
                                 defaultValue={file.caption}
                                 onChange={(e) => handleCaptionChange(index, e.target.value)}
-                                rows="5"
-                                cols="30"
+                                rows="10"
+                                cols="60"
                                 onKeyDown={(e) => handleKeyPress(e, index)}    
                             />
                         <div className="buttons">
+                            <button className="preview-btn">
+                                <img src={view} className="preview-icon"/>
+                                Preview</button>
+                            <button onClick={() => handleCropClick(file)} className="crop-btn">
+                                <img src={croped} className="croped-icon"/>   
+                                Crop</button>
                             <button
                                 className="download-single-button"
                                 onClick={() => handleSingleDownload(file)}
@@ -327,12 +334,6 @@ export const Logic = ({type, logo, defaultText}) => {
                                 <img src={download} className="download-icon"/>
                                 Download
                             </button>
-                            <button className="preview-btn">
-                                <img src={view} className="preview-icon"/>
-                                Preview</button>
-                            <button onClick={() => handleCropClick(file)} className="crop-btn">
-                                <img src={croped} className="croped-icon"/>   
-                                Crop</button>
                         </div>
                                 </div>
                     </div>
