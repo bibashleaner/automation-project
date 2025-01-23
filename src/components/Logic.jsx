@@ -8,11 +8,14 @@ import croped from '../icons/croped.png'
 import uploaded from '../icons/uploaded.png'
 import download from '../icons/download.png'
 import view from '../icons/view.png'
+import { PreviewModel } from './Preview'
 
 export const Logic = ({type, logo, defaultText}) => {
     const [uploadFiles, setUploadFiles] = useState([]);
     const [currentImage, setCurrentImage] = useState(null);
     const [overlayedFiles, setOverlayedFiles] = useState([]);
+    const [overlayOpacity, setOverlayOpacity] = useState(0.5);
+    const [previewImage, setPreviewImage] = useState(null);
     // const debounceTimeouts = useRef({});
     // const captionRenderedRef = useRef({});
 
@@ -22,7 +25,8 @@ export const Logic = ({type, logo, defaultText}) => {
     const handleUploadFiles = (files) => {
         const uploaded = [...uploadFiles];
         files.forEach((file) => {
-            if (uploaded.findIndex((f) => f.name === file.name) === -1) {
+            // if (uploaded.findIndex((f) => f.name === file.name) === -1) {
+            if(!uploaded.some((f) => f.name === file.name)){
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     uploaded.push({
@@ -46,11 +50,6 @@ export const Logic = ({type, logo, defaultText}) => {
     };
 
     const handleCaptionChange = async(index, caption) => {
-
-        // const updatedFiles = uploadFiles.map((file, i) =>
-        //     i === index ? { ...file, caption} : file
-        // );
-        // setUploadFiles(updatedFiles);
         const updatedFiles = [...uploadFiles];
         const file = updatedFiles[index];
     
@@ -80,7 +79,33 @@ export const Logic = ({type, logo, defaultText}) => {
         setCurrentImage(null);
     };
 
-    const createImageWithOverlay = (file) => {
+    //function to handle the opacity
+    const handleOverlayOpacityChange = async(e, fileIndex) =>{
+        const newOpacity = parseFloat(e.target.value);
+        setOverlayOpacity(newOpacity);
+
+        // const updatedFiles = await Promise.all(
+        //     uploadFiles.map(async (file) => {
+        //         const previewWithOverlay = await createImageWithOverlay(file, newOpacity);
+        //         return { ...file, previewWithOverlay };
+        //     })
+        // );
+
+        // Clone the current file
+    const updatedFile = { ...uploadFiles[fileIndex], overlayOpacity: newOpacity};
+    
+    // Generate the updated preview with the new opacity
+    const previewWithOverlay = await createImageWithOverlay(updatedFile, newOpacity);
+    updatedFile.previewWithOverlay = previewWithOverlay;
+
+    // Update the specific file in the state
+    const updatedFiles = [...uploadFiles];
+    updatedFiles[fileIndex] = updatedFile;
+
+        setUploadFiles(updatedFiles);
+    }
+
+    const createImageWithOverlay = (file, opacity = overlayOpacity) => {
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
 
@@ -119,7 +144,7 @@ export const Logic = ({type, logo, defaultText}) => {
                 context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
 
                 //add black overlay with 50% opacity
-                context.fillStyle = `rgba(0, 0, 0, 0.5)`;
+                context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
                 context.fillRect(0, 0, canvas.width, canvas.height);
 
                 //calculate dynamic logo size and position
@@ -206,24 +231,24 @@ export const Logic = ({type, logo, defaultText}) => {
         }
     };
 
-    useEffect(() => {
-        const updateOverlaidPreviews = async () => {
-                const updatedFiles = await Promise.all(
-                    uploadFiles.map(async (file) => {
-                        if(!file.captionRendered) {
-                            const previewWithOverlay = await createImageWithOverlay(file);
-                            return { ...file, previewWithOverlay };
-                        }
-                        return file;
-                    })
-                );
-                setOverlayedFiles(updatedFiles);
-        };
+    // useEffect(() => {
+    //     const updateOverlaidPreviews = async () => {
+    //             const updatedFiles = await Promise.all(
+    //                 uploadFiles.map(async (file) => {
+    //                     if(!file.captionRendered) {
+    //                         const previewWithOverlay = await createImageWithOverlay(file);
+    //                         return { ...file, previewWithOverlay };
+    //                     }
+    //                     return file;
+    //                 })
+    //             );
+    //             setOverlayedFiles(updatedFiles);
+    //     };
 
-        if (uploadFiles.length > 0) {
-            updateOverlaidPreviews();
-        }
-    }, [uploadFiles]);
+    //     if (uploadFiles.length > 0) {
+    //         updateOverlaidPreviews();
+    //     }
+    // }, [uploadFiles]);
 
     //function to download single image
     const handleSingleDownload = async (file) => {
@@ -270,6 +295,14 @@ export const Logic = ({type, logo, defaultText}) => {
             />
         );
     }  
+
+    const handlePreviewClick = (imageSrc) =>{
+        setPreviewImage(imageSrc);
+    }
+
+    const closePreview = () => {
+        setPreviewImage(null);
+    }
 
     return (
         <>
@@ -322,12 +355,15 @@ export const Logic = ({type, logo, defaultText}) => {
                                 onKeyDown={(e) => handleKeyPress(e, index)}    
                             />
                         <div className="buttons">
-                            <button className="preview-btn">
+
+                            <button className="preview-btn" onClick={() => handlePreviewClick(file.previewWithOverlay || file.preview)}>
                                 <img src={view} className="preview-icon"/>
                                 Preview</button>
+
                             <button onClick={() => handleCropClick(file)} className="crop-btn">
                                 <img src={croped} className="croped-icon"/>   
                                 Crop</button>
+
                             <button
                                 className="download-single-button"
                                 onClick={() => handleSingleDownload(file)}
@@ -335,11 +371,29 @@ export const Logic = ({type, logo, defaultText}) => {
                                 <img src={download} className="download-icon"/>
                                 Download
                             </button>
+
+                            <div className="opacity-slider">
+                                <label htmlFor={`opacity-${index}`}>Set Opacity: {/*<span>{(uploadFiles[index].overlayOpacity * 100).toFixed(0)}%</span>*/}</label>
+                                <input
+                                    id={`opacity-${index}`}
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    step="0.05"
+                                    value={uploadFiles[index].overlayOpacity}
+                                    onChange={(e) => handleOverlayOpacityChange(e, index)}
+                                />
+                                
+                            </div>
+
                         </div>
                         </div>
                     </div>
                 ))}
             </div>
+            )}
+            {previewImage && (
+                <PreviewModel imageSrc={previewImage} onClose={closePreview} />
             )}
         </>
     );
