@@ -1,16 +1,21 @@
 import React from "react";
 import { Logic } from "./Logic";
-import { SubBerwick } from "./SubBerwick";
 import timesLogo from '../assets/pictures/timesLogo.png'
+// import { useLocation } from "react-router-dom";
 import '../assets/css/berwick.css'
 
-export const Berwick = () => {
+export const Image = () => {
+
     return (
         <>
         <div className="header">
             <h1>Times Berwick</h1>
         </div>
-        <SubBerwick />
+        <Logic
+            // type="Image"
+            // logo={timesLogo}
+            // defaultText="TIMES BERWICK"
+        />
         </>
     );
 }

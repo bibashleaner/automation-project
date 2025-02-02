@@ -86,12 +86,17 @@
     .berwick-button,
     .cranbourne-button {
         display: flex;
-        padding: 8% 28% 8% 28%;
         border-radius: 25px;
         margin-right: 13%;
     }
 
+    .berwick-button{
+        padding: 8% 28% 8% 28%;
+    }
+
     .cranbourne-button {
+        padding: 8% 28% 8% 28%;
         margin-top: 2rem;
+        margin-left: 0.5%;
     }
 }

@@ -3,6 +3,10 @@ import {BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import {Home} from './components/Home'
 import { Berwick } from "./components/Berwick"
 import { Cranbourne } from "./components/Cranbourne"
+import { Logic } from "./components/Logic"
+import { Slide } from "./components/Reel/Slide"
+import { SubBerwick } from "./components/SubBerwick"
+import timesLogo from './assets/pictures/timesLogo.png'
 
 function App() {
 
@@ -13,6 +17,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/berwick" element={<Berwick />} />
         <Route path="/cranbourne" element={<Cranbourne />} />
+        <Route path="/" element={<SubBerwick />} />
+        <Route path="/image" element={<Logic type="Image" logo={timesLogo} defaultText="TIMES BERWICK" />} />
+        <Route path="/reels" element={<Slide />} />
       </Routes>
     </Router>
     </>

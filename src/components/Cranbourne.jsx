@@ -5,7 +5,9 @@ import cranbourneLogo from '../assets/pictures/cranbourneLogo.png'
 export const Cranbourne = () => {
     return (
         <>
-        <h1>Welcome to Times Cranbourne</h1>
+        <div className="header">
+            <h1>Times Cranbourne</h1>
+        </div>
         <Logic
             type="Cranbourne"
             logo={cranbourneLogo}

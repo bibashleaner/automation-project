@@ -16,11 +16,52 @@ export const Logic = ({type, logo, defaultText}) => {
     const [overlayedFiles, setOverlayedFiles] = useState([]);
     const [overlayOpacity, setOverlayOpacity] = useState(0.5);
     const [previewImage, setPreviewImage] = useState(null);
-    // const debounceTimeouts = useRef({});
-    // const captionRenderedRef = useRef({});
+    const [isDragging, setIsDragging] = useState(false);
 
     const captionFontLoaded = new FontFace("CaptionFont", "url('/src/fonts/DMSerifText.ttf')");
-    const defaulFontLoaded = new FontFace("DefaultFont", "url('/src/fonts/Kanit-Regular.ttf')")
+    const defaulFontLoaded = new FontFace("DefaultFont", "url('/src/fonts/Kanit-Regular.ttf')");
+
+    const handleDragEnter = (e) =>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    }
+
+    const handleDragOver = (e) =>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    }
+
+    const handleDragLeave = (e) =>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    }
+
+    const handleDrop = (e) =>{
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+
+        const files = Array.from(e.dataTransfer.files);
+        handleUploadFiles(files);
+    }
+
+    useEffect(() => {
+        const preventDefault = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+    
+        window.addEventListener("dragover", preventDefault);
+        window.addEventListener("drop", preventDefault);
+    
+        return () => {
+            window.removeEventListener("dragover", preventDefault);
+            window.removeEventListener("drop", preventDefault);
+        };
+    }, []);    
 
     const handleUploadFiles = (files) => {
         const uploaded = [...uploadFiles];
@@ -309,14 +350,25 @@ export const Logic = ({type, logo, defaultText}) => {
             {uploadFiles.length === 0 ? (
             <>
                 <h2 className="upload-text">Upload Files</h2>
-                <div className="uploadArea">
-                    <img src={upload} alt="upload" />
-                    <h3>Drag and Drop here</h3>
+                <div className="image-upload-container">
+                    <div 
+                        className="drop-area"
+                        onDragEnter={(e) => handleDragEnter(e)}
+                        onDragOver={(e) => handleDragOver(e)}
+                        onDragLeave={(e) => handleDragLeave(e)}
+                        onDrop={(e) => handleDrop(e)}
+                    >
+                    <div className="uploadArea">
+                        <img src={upload} alt="upload" />
+                        <h3>Drag and Drop here</h3>
                     <h3>or</h3>
                     <button onClick={() => document.getElementById("fileuploaded").click()}>
                         select files
                     </button>
                     <input id="fileuploaded" type="file" style={{display: "none"}} multiple onChange={handleFileEvent} />
+                    </div>
+
+                </div>
                 </div>
             </>
 
@@ -354,7 +406,7 @@ export const Logic = ({type, logo, defaultText}) => {
                                 // cols="100"
                                 onKeyDown={(e) => handleKeyPress(e, index)}    
                             />
-                        <div className="buttons">
+                            <div className="buttons">
 
                             <button className="preview-btn" onClick={() => handlePreviewClick(file.previewWithOverlay || file.preview)}>
                                 <img src={view} className="preview-icon"/>
@@ -373,7 +425,7 @@ export const Logic = ({type, logo, defaultText}) => {
                             </button>
 
                             <div className="opacity-slider">
-                                <label htmlFor={`opacity-${index}`}>Set Opacity: {/*<span>{(uploadFiles[index].overlayOpacity * 100).toFixed(0)}%</span>*/}</label>
+                                <label htmlFor={`opacity-${index}`}>Set Opacity: <span>{((uploadFiles[index]?.overlayOpacity || 0) * 100).toFixed(0)}%</span>{/*<span>{(uploadFiles[index].overlayOpacity * 100).toFixed(0)}%</span>*/}</label>
                                 <input
                                     id={`opacity-${index}`}
                                     type="range"
