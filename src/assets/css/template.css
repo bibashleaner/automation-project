@@ -10,7 +10,7 @@
     align-items: center;
 }
 
-h1{
+.template-container h1{
     font-size: 200%;
     margin-bottom: 1em;
 }
@@ -18,7 +18,7 @@ h1{
 .select-container select{
     color: white;
     background-color: #007BFF;
-    padding: 10px 40px;
+    padding: 20px 115px;
     border-radius: 15px;
     font-size: 150%;
     cursor: pointer;

@@ -10,16 +10,30 @@
     align-items: center;
 }
 
+.add-image-container h1{
+    display: flex;
+    justify-content: center;
+    font-size: 200%;
+    margin-bottom: 1em;
+}
+
 button{
+    display: flex;
+    flex-direction: row;
     color: white;
     background-color: #28A745;
-    padding: 10px 40px;
+    padding: 20px 100px;
     border-radius: 15px;
     font-size: 150%;
     cursor: pointer;
+    white-space: nowrap;
 }
 
-button:focus{
-    border: none;
+select:focus{
     outline: none;
+    border: none;
+}
+
+@media (max-width: 697px){
+    
 }

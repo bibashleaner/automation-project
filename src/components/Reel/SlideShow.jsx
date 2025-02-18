@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Slide, Fade, Zoom } from "react-slideshow-image";
+import { CropImage } from "../Crop";
 import 'react-slideshow-image/dist/styles.css';
 import '../../assets/css/slideshow.css'
 
@@ -21,6 +22,8 @@ const divStyle = {
 
 export const Slideshow = ({ slideImages, template }) => {
   const canvasRef = useRef(null);
+  const [slideImage, setSlideImage] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [videoUrl, setVideoUrl] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -202,13 +205,14 @@ export const Slideshow = ({ slideImages, template }) => {
         {slideImages.length > 0 && (
           <AnimationComponent autoplay={true} transitionDuration={500} duration={2000}>
             {slideImages.map((image, index) => (
-              <div key={index} style={{ ...divStyle, backgroundImage: `url(${image.url})` }}></div>
+              <div key={index} style={{...divStyle, backgroundImage: `url(${image.url})` }}></div>
             ))}
           </AnimationComponent>
         )}
 
         <canvas ref={canvasRef} width={1280} height={720} style={{ display: "none" }} />
 
+        {slideImages.length > 1 && (
         <div className="controls">
           <button
             onClick={generateVideo}
@@ -218,6 +222,7 @@ export const Slideshow = ({ slideImages, template }) => {
             {isRecording ? `Processing... ${Math.round(progress)}%` : "Generate Video"}
           </button>
         </div>
+        )}
       </>
     )}
 
@@ -236,18 +241,14 @@ export const Slideshow = ({ slideImages, template }) => {
 };
 
 
-
 // import React, { useRef, useState, useEffect } from "react";
 // import { Slide, Fade, Zoom } from "react-slideshow-image";
-// import 'react-slideshow-image/dist/styles.css';
+// import "react-slideshow-image/dist/styles.css"; // Ensure this is imported
+// import "../../assets/css/slideshow.css"; // Custom CSS styles
 
-// const divStyle = {
-//   display: "flex",
-//   alignItems: "center",
-//   justifyContent: "center",
-//   height: "400px",
-//   backgroundSize: "cover",
-//   backgroundPosition: "center",
+// const slideSize = {
+//   width: "500px",
+//   height: "500px",
 // };
 
 // export const Slideshow = ({ slideImages, template }) => {
@@ -255,89 +256,66 @@ export const Slideshow = ({ slideImages, template }) => {
 //   const [videoUrl, setVideoUrl] = useState(null);
 //   const [isRecording, setIsRecording] = useState(false);
 //   const [progress, setProgress] = useState(0);
+//   const [mode, setMode] = useState("slideshow");
 
-//   // Improved easing function for smoother transitions
+//   // Easing function for smooth animations
 //   const easeInOutCubic = (t) => {
-//     return t < 0.5 
-//       ? 4 * t * t * t 
-//       : 1 - Math.pow(-2 * t + 2, 3) / 2;
+//     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 //   };
 
-//   const AnimationComponent =
-//     template === "zoom"
-//       ? Zoom
-//       : template === "fade"
-//       ? Fade
-//       : Slide;
+//   const AnimationComponent = template === "zoom" ? Zoom : template === "fade" ? Fade : Slide;
 
-//   // Enhanced image loading with error handling and caching
+//   // Preload images to improve performance
 //   const imageCache = new Map();
 //   const loadImage = (imageUrl) => {
-//     if (imageCache.has(imageUrl)) {
-//       return Promise.resolve(imageCache.get(imageUrl));
-//     }
-
+//     if (imageCache.has(imageUrl)) return Promise.resolve(imageCache.get(imageUrl));
 //     return new Promise((resolve, reject) => {
 //       const img = new Image();
-//       img.crossOrigin = "anonymous"; // Handle CORS issues
+//       img.crossOrigin = "anonymous"; 
 //       img.src = imageUrl;
 //       img.onload = () => {
 //         imageCache.set(imageUrl, img);
 //         resolve(img);
 //       };
-//       img.onerror = (err) => reject(new Error(`Failed to load image: ${imageUrl}`));
+//       img.onerror = () => reject(new Error(`Failed to load image: ${imageUrl}`));
 //     });
 //   };
 
-//   // Preload all images
 //   const preloadImages = async () => {
 //     try {
-//       await Promise.all(slideImages.map(image => loadImage(image.url)));
+//       await Promise.all(slideImages.map((image) => loadImage(image.url)));
 //     } catch (error) {
 //       console.error("Error preloading images:", error);
 //     }
 //   };
 
-//   // Improved render function with better transition handling
+//   // Render images smoothly to canvas
 //   const renderToCanvas = async (ctx, currentImage, nextImage, progress) => {
 //     if (!currentImage || !nextImage) return;
-
 //     const easedProgress = easeInOutCubic(progress);
 //     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 //     try {
-//       const [currentImg, nextImg] = await Promise.all([
-//         loadImage(currentImage.url),
-//         loadImage(nextImage.url)
-//       ]);
+//       const [currentImg, nextImg] = await Promise.all([loadImage(currentImage.url), loadImage(nextImage.url)]);
 
 //       const drawImage = (img, alpha = 1, scale = 1, offsetX = 0) => {
-//         const canvasWidth = ctx.canvas.width;
-//         const canvasHeight = ctx.canvas.height;
-        
+//         const { width, height } = ctx.canvas;
 //         const imgRatio = img.width / img.height;
-//         const canvasRatio = canvasWidth / canvasHeight;
-        
-//         let drawWidth = canvasWidth;
-//         let drawHeight = canvasHeight;
-        
-//         if (imgRatio > canvasRatio) {
-//           drawHeight = canvasWidth / imgRatio;
-//         } else {
-//           drawWidth = canvasHeight * imgRatio;
-//         }
+//         const canvasRatio = width / height;
 
-//         const x = (canvasWidth - drawWidth) / 2 + offsetX;
-//         const y = (canvasHeight - drawHeight) / 2;
+//         let drawWidth = width, drawHeight = height;
+//         if (imgRatio > canvasRatio) drawHeight = width / imgRatio;
+//         else drawWidth = height * imgRatio;
+
+//         const x = (width - drawWidth) / 2 + offsetX;
+//         const y = (height - drawHeight) / 2;
 
 //         ctx.globalAlpha = alpha;
 //         if (template === "zoom") {
 //           const zoomScale = scale;
 //           const scaledWidth = drawWidth * zoomScale;
 //           const scaledHeight = drawHeight * zoomScale;
-//           const zoomX = x - (scaledWidth - drawWidth) / 2;
-//           const zoomY = y - (scaledHeight - drawHeight) / 2;
-//           ctx.drawImage(img, zoomX, zoomY, scaledWidth, scaledHeight);
+//           ctx.drawImage(img, x - (scaledWidth - drawWidth) / 2, y - (scaledHeight - drawHeight) / 2, scaledWidth, scaledHeight);
 //         } else {
 //           ctx.drawImage(img, x, y, drawWidth, drawHeight);
 //         }
@@ -360,7 +338,7 @@ export const Slideshow = ({ slideImages, template }) => {
 //     }
 //   };
 
-//   // Improved video generation with better quality settings
+//   // Video generation
 //   const generateVideo = async () => {
 //     if (!slideImages || slideImages.length < 2) {
 //       alert("Please add at least 2 images for the slideshow.");
@@ -369,18 +347,14 @@ export const Slideshow = ({ slideImages, template }) => {
 
 //     setIsRecording(true);
 //     setProgress(0);
-    
-//     // Preload images before starting
 //     await preloadImages();
 
 //     const canvas = canvasRef.current;
 //     const ctx = canvas.getContext("2d");
-    
-//     // Higher quality video settings
 //     const stream = canvas.captureStream(60);
 //     const mediaRecorder = new MediaRecorder(stream, {
-//       mimeType: 'video/webm;codecs=vp9',
-//       videoBitsPerSecond: 8000000 // 8 Mbps for better quality
+//       mimeType: "video/webm;codecs=vp9",
+//       videoBitsPerSecond: 8000000,
 //     });
 
 //     const chunks = [];
@@ -390,6 +364,7 @@ export const Slideshow = ({ slideImages, template }) => {
 //       setVideoUrl(URL.createObjectURL(blob));
 //       setIsRecording(false);
 //       setProgress(100);
+//       setMode("video");
 //     };
 
 //     mediaRecorder.start();
@@ -403,20 +378,13 @@ export const Slideshow = ({ slideImages, template }) => {
 //     const renderFrame = async () => {
 //       const transitionIndex = Math.floor(currentFrame / framesPerTransition);
 //       const transitionProgress = (currentFrame % framesPerTransition) / framesPerTransition;
-      
-//       const currentImage = slideImages[transitionIndex];
-//       const nextImage = slideImages[transitionIndex + 1];
 
-//       await renderToCanvas(ctx, currentImage, nextImage, transitionProgress);
-      
+//       await renderToCanvas(ctx, slideImages[transitionIndex], slideImages[transitionIndex + 1], transitionProgress);
+
 //       currentFrame++;
 //       setProgress((currentFrame / totalFrames) * 100);
-
-//       if (currentFrame < totalFrames) {
-//         requestAnimationFrame(renderFrame);
-//       } else {
-//         mediaRecorder.stop();
-//       }
+//       if (currentFrame < totalFrames) requestAnimationFrame(renderFrame);
+//       else mediaRecorder.stop();
 //     };
 
 //     requestAnimationFrame(renderFrame);
@@ -424,51 +392,34 @@ export const Slideshow = ({ slideImages, template }) => {
 
 //   return (
 //     <div className="slide-container">
-//       {slideImages.length > 0 && (
-//         <AnimationComponent autoplay={true} transitionDuration={500} duration={2000}>
-//           {slideImages.map((image, index) => (
-//             <div key={index} style={{ ...divStyle, backgroundImage: `url(${image.url})` }}></div>
-//           ))}
-//         </AnimationComponent>
-//       )}
-
-//       <canvas 
-//         ref={canvasRef} 
-//         width={1280} 
-//         height={720} 
-//         style={{ display: "none" }} 
-//       />
-
-//       {slideImages.length > 0 && (
-//         <div className="mt-4 space-y-4">
-//           <button
-//             onClick={generateVideo}
-//             disabled={isRecording}
-//             className={`w-full px-4 py-2 rounded-md ${
-//               isRecording ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"
-//             }`}
-//           >
-//             {isRecording ? `Processing... ${Math.round(progress)}%` : "Generate Video"}
-//           </button>
-
-//           {videoUrl && (
-//             <div className="space-y-2">
-//               <video controls src={videoUrl} className="w-full max-w-md mx-auto rounded-lg shadow-lg" />
-//               <a 
-//                 href={videoUrl} 
-//                 download="slideshow.webm" 
-//                 className="block w-full text-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
-//               >
-//                 Download Video
-//               </a>
+//       {mode === "slideshow" && (
+//         <>
+//           {slideImages.length > 0 && (
+//             <AnimationComponent autoplay={true} transitionDuration={500} duration={2000}>
+//               {slideImages.map((image, index) => (
+//                 <div key={index} style={{ backgroundImage: `url(${image.url})` }}></div>
+//               ))}
+//             </AnimationComponent>
+//           )}
+//           <canvas ref={canvasRef} width={1280} height={720} style={{ display: "none" }} />
+//           {slideImages.length > 1 && (
+//             <div className="controls">
+//               <button onClick={generateVideo} disabled={isRecording} className={`generate-btn ${isRecording ? "disable" : ""}`}>
+//                 {isRecording ? `Processing... ${Math.round(progress)}%` : "Generate Video"}
+//               </button>
 //             </div>
 //           )}
+//         </>
+//       )}
+
+//       {mode === "video" && videoUrl && (
+//         <div className="video-container">
+//           <video controls src={videoUrl} className="video-preview" />
+//           <a href={videoUrl} download="slideshow.webm" className="download-btn">
+//             Download Video
+//           </a>
 //         </div>
 //       )}
 //     </div>
 //   );
 // };
-
-
-
-

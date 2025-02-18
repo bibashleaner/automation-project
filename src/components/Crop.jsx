@@ -1,6 +1,7 @@
 import React, {useState, useCallback} from "react";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "./CropImg";
+import 'react-easy-crop/react-easy-crop.css';
 import '../assets/css/crop.css'
 
 export const CropImage = ({imageSrc, onCropDone}) =>{
