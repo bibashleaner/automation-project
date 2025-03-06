@@ -4,11 +4,13 @@ import { getCroppedImg } from "./CropImg";
 import 'react-easy-crop/react-easy-crop.css';
 import '../assets/css/crop.css'
 
-export const CropImage = ({imageSrc, onCropDone}) =>{
+export const CropImage = ({imageSrc, onCropDone, type}) =>{
     const [crop, setCrop] = useState({x:0, y:0});
     const [zoom, setZoom] = useState(1);
     const [croppedImage, setCroppedImage] = useState(null);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
+    const aspectRatio = type === "reelCrop" ? 9 / 16 : 1;
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) =>{
         setCroppedAreaPixels(croppedAreaPixels);
@@ -30,13 +32,13 @@ export const CropImage = ({imageSrc, onCropDone}) =>{
 
     return (
         <>
-        <div className="container" style={{display: imageSrc === null || croppedImage !== null ? "none" : "block",}}>  
+        <div className="cropper-container" style={{display: imageSrc === null || croppedImage !== null ? "none" : "block",}}>  
             <div className="crop-container">
                 <Cropper
                     image = {imageSrc}
                     crop = {crop}
                     zoom = {zoom}
-                    aspect={1}  //1:1 ratio
+                    aspect={aspectRatio}  //1:1 ratio
                     onCropChange={setCrop}
                     onCropComplete={onCropComplete}
                     onZoomChange={setZoom}

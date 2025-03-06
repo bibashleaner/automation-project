@@ -6,6 +6,7 @@ import { Cranbourne } from "./components/Cranbourne"
 import { Logic } from "./components/Logic"
 import { Slide } from "./components/Reel/Slide"
 import { SubBerwick } from "./components/SubBerwick"
+import { Subcranbourne } from "./components/Subcranbourne"
 import timesLogo from './assets/pictures/timesLogo.png'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/cranbourne" element={<Cranbourne />} />
         <Route path="/" element={<SubBerwick />} />
         <Route path="/image" element={<Logic type="Image" logo={timesLogo} defaultText="TIMES BERWICK" />} />
+        <Route path="/" element={<Subcranbourne />} />
         <Route path="/reels" element={<Slide />} />
       </Routes>
     </Router>

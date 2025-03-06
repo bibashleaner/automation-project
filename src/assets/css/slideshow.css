@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.slideshow-wrapper{
+  margin-top: 1%;
+}
+
 .slide-container {
     position: relative;
     width: 80%;
@@ -14,10 +18,10 @@
   
   .controls {
     text-align: center;
-    margin-top: 10px;
   }
   
   .generate-btn {
+    margin-left: 45%;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -30,6 +34,17 @@
   .generate-btn.disable {
     background-color: gray;
     cursor: not-allowed;
+  }
+
+  .download-btn{
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
   }
   
   

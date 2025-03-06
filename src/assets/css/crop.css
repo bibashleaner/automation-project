@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-.container {
+.cropper-container {
     position: relative;
     overflow: hidden;
     height: 65vh;
@@ -36,7 +36,7 @@
   }
 
   @media (max-width: 768px){
-    .container{
+    .cropper-container{
       height: 50vh;
     }
   }

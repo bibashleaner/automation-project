@@ -29,7 +29,7 @@ import React, { useState } from "react";
 import { Slideshow } from "./SlideShow";
 import { ImageUploader } from "./ImageUploader";
 import { TemplateSelector } from "./Templates";
-import "../../assets/css/slide.css";
+// import "../../assets/css/slide.css";
 
 export const Slide = () => {
     const [slideImage, setSlideImage] = useState([]);
@@ -47,7 +47,7 @@ export const Slide = () => {
 
     return (
         <>
-            <div className="container">
+            <div className="slidess-container">
                 <div className="column">
                     {/* Pass the cropping status callback */}
                     <ImageUploader onFileSelect={setSlideImage} onCroppingChange={handleCroppingChange} />

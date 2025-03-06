@@ -1,7 +1,7 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import "../assets/css/logic.css";
 import { CropImage } from "./Crop";
-// import timesLogo from "../assets/pictures/timesLogo.png";
 import { wrapText } from "./TextHelper"
 import upload from '../icons/upload.png'
 import croped from '../icons/croped.png'
@@ -9,14 +9,16 @@ import uploaded from '../icons/uploaded.png'
 import download from '../icons/download.png'
 import view from '../icons/view.png'
 import { PreviewModel } from './Preview'
+import { useLocation } from "react-router-dom";
 
 export const Logic = ({type, logo, defaultText}) => {
     const [uploadFiles, setUploadFiles] = useState([]);
     const [currentImage, setCurrentImage] = useState(null);
-    const [overlayedFiles, setOverlayedFiles] = useState([]);
     const [overlayOpacity, setOverlayOpacity] = useState(0.5);
     const [previewImage, setPreviewImage] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [cranImageOption, setCranImageOption] = useState('default');
+    const location = useLocation();
 
     const captionFontLoaded = new FontFace("CaptionFont", "url('/src/fonts/DMSerifText.ttf')");
     const defaulFontLoaded = new FontFace("DefaultFont", "url('/src/fonts/Kanit-Regular.ttf')");
@@ -124,26 +126,21 @@ export const Logic = ({type, logo, defaultText}) => {
     const handleOverlayOpacityChange = async(e, fileIndex) =>{
         const newOpacity = parseFloat(e.target.value);
         setOverlayOpacity(newOpacity);
+        const updatedFile = { ...uploadFiles[fileIndex], overlayOpacity: newOpacity};
+        
+        // Generate the updated preview with the new opacity
+        const previewWithOverlay = await createImageWithOverlay(updatedFile, newOpacity);
+        updatedFile.previewWithOverlay = previewWithOverlay;
 
-        // const updatedFiles = await Promise.all(
-        //     uploadFiles.map(async (file) => {
-        //         const previewWithOverlay = await createImageWithOverlay(file, newOpacity);
-        //         return { ...file, previewWithOverlay };
-        //     })
-        // );
-
-        // Clone the current file
-    const updatedFile = { ...uploadFiles[fileIndex], overlayOpacity: newOpacity};
-    
-    // Generate the updated preview with the new opacity
-    const previewWithOverlay = await createImageWithOverlay(updatedFile, newOpacity);
-    updatedFile.previewWithOverlay = previewWithOverlay;
-
-    // Update the specific file in the state
-    const updatedFiles = [...uploadFiles];
-    updatedFiles[fileIndex] = updatedFile;
+        // Update the specific file in the state
+        const updatedFiles = [...uploadFiles];
+        updatedFiles[fileIndex] = updatedFile;
 
         setUploadFiles(updatedFiles);
+    }
+
+    const handleCranImageOptionChange = (e) =>{
+        setCranImageOption(e.target.value);
     }
 
     const createImageWithOverlay = (file, opacity = overlayOpacity) => {
@@ -159,8 +156,6 @@ export const Logic = ({type, logo, defaultText}) => {
         return new Promise((resolve) => {
             image.onload = () => {
                 //set canvas dimension to match the image
-                // canvas.width = image.width;
-                // canvas.height = image.height;
                 
                 const aspectRatio = image.width / image.height;
                 let drawWidth, drawHeight, offsetX, offsetY;
@@ -184,69 +179,153 @@ export const Logic = ({type, logo, defaultText}) => {
                 //Draw the main image
                 context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
 
-                //add black overlay with 50% opacity
-                context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
-                context.fillRect(0, 0, canvas.width, canvas.height);
+                if(type === 'cranimage'){
+                    context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+                    context.fillRect(0, 0, canvas.width, canvas.height);
+                    if(cranImageOption === 'alternative'){
+                        // Alternative overlay: Draw a left-hand side rectangle with opacity.
+                        const rectWidth = canvas.width * 0.2; // 30% of the canvas width
+                        // context.fillStyle = "rgba(0, 0, 0, 0.5)"; 
+                        context.fillStyle = "rgba(162, 68, 30, 0.5)"; 
+                        context.fillRect(0, 0, rectWidth, canvas.height);
+                    }else{
+                        context.fillStyle = '#bc5125'; // Orange color
 
-                //calculate dynamic logo size and position
-                // const logoWidth = Math.min(image.width * 0.3, 1000); // 10% of image width
-                // const logoHeight = Math.min(image.height * 0.3, 1000); 
-                // const logoMargin = image.width * 0.02;
-                // const logoX = (canvas.width - logoWidth) / 2; //center logo
-                // const logoY = logoMargin;
+                        const baseFontSize = Math.max(16, Math.floor(canvas.width * 0.015)); // Approximate base font size
 
-                // const logoWidth = 134;
-                // const logoHeight = 182;
+                        //Top rectangle 
+                        const topLeftHeight = baseFontSize * 9;  
+                        const topRightHeight = baseFontSize * 6; 
 
-                // const logoMarginTop = 40;
-                // // const logoMarginLeft = 474.87;
-                // const logoY = logoMarginTop;
-                // const logoX = (canvas.width - image.width) / 2;
+                        context.beginPath();
+                        context.moveTo(0, 0); // Start at the top-left corner
+                        context.lineTo(canvas.width, 0); // Extend to the top-right corner
+                        context.lineTo(canvas.width, topRightHeight); // Move downward (right side height)
+                        context.lineTo(0, topLeftHeight); // Move downward (left side height)
+                        context.closePath();
+                        context.fill();
+
+                        //Bottom rectangle 
+                        const bottomLeftHeight = baseFontSize * 6; 
+                        const bottomRightHeight = baseFontSize * 9; 
+                        const bottomY = canvas.height;
+
+                        context.beginPath();
+                        context.moveTo(0, bottomY); // Start at the bottom-left corner
+                        context.lineTo(canvas.width, bottomY); // Extend to the bottom-right corner
+                        context.lineTo(canvas.width, bottomY - bottomRightHeight); // Move upward (right side height)
+                        context.lineTo(0, bottomY - bottomLeftHeight); // Move upward (left side height)
+                        context.closePath();
+                        context.fill();
+                    }
+                }
+                // else{
+                //     //add black overlay with 50% opacity
+                //     context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+                //     context.fillRect(0, 0, canvas.width, canvas.height);
+                // }
 
                 const logoImage = new Image();
                 logoImage.src = logo;
 
                 logoImage.onload = () => {
-                    //draw the logo
-                    const logoWidth = 250;  //134
-                    const logoHeight = 220;
-                    // const logoWidth = Math.min(image.width * 0.3, 1000); // 10% of image width
-                    // const logoHeight = Math.min(image.height * 0.3, 1000); 
-                    const logoY = 40; //logoMarginTop
-                    const logoX = 430; //logoMarginLeft 474.87
+
+                    let logoX, logoY, logoHeight, logoWidth;
+                    let computedLogoX;
+
+                    if (type === "cranimage") {
+                        if (cranImageOption === 'alternative'){
+                            logoWidth = canvas.width * 0.35; 
+                            logoHeight = canvas.height * 0.35;
+
+                            const topRectHeight = canvas.height * 0.10; // Adjust based on your design
+                            // // logoX = (canvas.width - logoWidth) / 50; // Center logo horizontally
+                            logoY = topRectHeight - (logoHeight / 2);
+                            logoX = 3;
+                            // logoY = 2;
+                        }else{
+                            logoWidth = canvas.width * 0.35; 
+                            logoHeight = canvas.height * 0.35;
+                        
+                            const topRectHeight = canvas.height * 0.10; // Adjust based on your design
+                            logoX = (canvas.width - logoWidth) / 2; // Center logo horizontally
+                            logoY = topRectHeight - (logoHeight / 2);
+                            computedLogoX = logoX;
+
+                            // context.lineWidth = 5;  // Set the border width
+                            // context.strokeStyle = "#ffffff"; // Orange color for border (can be adjusted)
+                            // context.strokeRect(logoX, logoY, logoWidth, logoHeight);
+                        }   
+                    } else {
+                        logoWidth = 250;
+                        logoHeight = 220;
+                        
+                        logoX = 430; // Default left margin
+                        logoY = 40;  // Default top margin
+                        computedLogoX = logoX;
+                    }
                     context.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
-                    // console.log(logoWidth, logoHeight);
                     
-                    //add default text
-                    const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.022)); //scale with the image width
-                    context.font = `${defaultFontSize}px DefaultFont`;
-                    context.fillStyle = "white";
-                    context.textAlign = "center";
+                    if (type != 'cranimage'){
+                        //add default text
+                        const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.022)); //scale with the image width
+                        context.font = `${defaultFontSize}px DefaultFont`;
+                        context.fillStyle = "white";
+                        context.textAlign = "center";
 
-                    const defaultTextY = canvas.height - defaultFontSize - 10; // 10px margin from bottom
-                    context.fillText(defaultText, canvas.width / 2, defaultTextY);
-
+                        const defaultTextY = canvas.height - defaultFontSize - 10; // 10px margin from bottom
+                        context.fillText(defaultText, canvas.width / 2, defaultTextY);
+                    }
+                    
                     //add the caption
                     if (file.caption && file.caption.trim() !== "") {
 
                         const captionFontSize = Math.max(20, Math.floor(canvas.width * 0.070)); //scale with image size
                         context.font = `${captionFontSize}px CaptionFont`;
                         context.fillStyle = "white";
-                        context.textAlign = "center";
+                        // context.textAlign = "center";
+
+                        let captionX;
+                        // If we're in cranimage alternative mode, align caption to left using computedLogoX.
+                        if (type === "cranimage" && cranImageOption === "alternative") {
+                            context.textAlign = "left";
+                            captionX = 50; // Align the caption with the logo's left position.
+                        } else {
+                            context.textAlign = "center";
+                            captionX = canvas.width / 2;
+                        }
 
                         const captionY = canvas.height - (captionFontSize * 2); // Position above default text
                         // context.fillText(file.caption, canvas.width / 2, captionY);
 
                         // **Wrap text logic**
-                        const maxWidth = canvas.width * 0.8; // 80% of canvas width
+                        // const maxWidth = canvas.width * 0.8; // 80% of canvas width
+                        const maxWidth = type === "cranimage" && cranImageOption === "alternative" ? canvas.width - captionX - 10 : canvas.width * 0.8;
                         const wrappedLines = wrapText(context, file.caption, maxWidth, captionFontSize);
 
                         // Draw each line of the wrapped text
-                        let currentY = captionY - (wrappedLines.length - 1) * (captionFontSize + 5);
-                        for (const line of wrappedLines) {
-                            context.fillText(line, canvas.width / 2, currentY); 
-                            currentY += captionFontSize + 5; // Line height
+                        let currentY;
+                        if (type === "cranimage" && cranImageOption === "alternative"){
+                            currentY = captionY - (wrappedLines.length - 2.2) * (captionFontSize + 5);
+                        }else{
+                            currentY = captionY - (wrappedLines.length - 1) * (captionFontSize + 5);
                         }
+                        
+                        // for (const line of wrappedLines) {
+                        //     // context.fillText(line, canvas.width / 2, currentY); 
+                        //     context.fillText(line, captionX, currentY); 
+                        //     currentY += captionFontSize + 5; // Line height
+                        // }
+
+                        const lineIndent = 30; // How many extra pixels you want to shift subsequent lines
+
+                        wrappedLines.forEach((line, i) => {
+                            // For the first line, no extra indent. For subsequent lines, add an offset.
+                            const lineX = i === 0 ? captionX : captionX + lineIndent;
+                            context.fillText(line, lineX, currentY);
+                            currentY += captionFontSize + 5; // Move down for the next line
+                        });
+
                         resolve(canvas.toDataURL("image/png"));
                         console.log(wrappedLines);
                     }
@@ -272,32 +351,8 @@ export const Logic = ({type, logo, defaultText}) => {
         }
     };
 
-    // useEffect(() => {
-    //     const updateOverlaidPreviews = async () => {
-    //             const updatedFiles = await Promise.all(
-    //                 uploadFiles.map(async (file) => {
-    //                     if(!file.captionRendered) {
-    //                         const previewWithOverlay = await createImageWithOverlay(file);
-    //                         return { ...file, previewWithOverlay };
-    //                     }
-    //                     return file;
-    //                 })
-    //             );
-    //             setOverlayedFiles(updatedFiles);
-    //     };
-
-    //     if (uploadFiles.length > 0) {
-    //         updateOverlaidPreviews();
-    //     }
-    // }, [uploadFiles]);
-
     //function to download single image
     const handleSingleDownload = async (file) => {
-        // const overlayedImage = await createImageWithOverlay(file);
-        // const link = document.createElement("a");
-        // link.download = `${file.name}`;
-        // link.href = overlayedImage;
-        // link.click();
 
         const updatedFiles = uploadFiles.map((f) =>
             f.name === file.name ? { ...f, rendering: true } : f
@@ -407,6 +462,7 @@ export const Logic = ({type, logo, defaultText}) => {
                                 onKeyDown={(e) => handleKeyPress(e, index)}    
                             />
                             <div className="buttons">
+                                
 
                             <button className="preview-btn" onClick={() => handlePreviewClick(file.previewWithOverlay || file.preview)}>
                                 <img src={view} className="preview-icon"/>
@@ -424,7 +480,8 @@ export const Logic = ({type, logo, defaultText}) => {
                                 Download
                             </button>
 
-                            <div className="opacity-slider">
+                            {type == "cranimage" && (
+                                <div className="opacity-slider">
                                 <label htmlFor={`opacity-${index}`}>Set Opacity: <span>{((uploadFiles[index]?.overlayOpacity || 0) * 100).toFixed(0)}%</span>{/*<span>{(uploadFiles[index].overlayOpacity * 100).toFixed(0)}%</span>*/}</label>
                                 <input
                                     id={`opacity-${index}`}
@@ -434,9 +491,25 @@ export const Logic = ({type, logo, defaultText}) => {
                                     step="0.05"
                                     value={uploadFiles[index].overlayOpacity}
                                     onChange={(e) => handleOverlayOpacityChange(e, index)}
-                                />
-                                
+                                />                               
                             </div>
+                            )}
+
+                            {type === "cranimage" && (
+                                <div className="cranimage-dropdown">
+                                <label htmlFor={`cranimage-dropdown-${index}`}>
+                                    Template:
+                                </label>
+                                <select
+                                    id={`cranimage-dropdown-${index}`}
+                                    value={cranImageOption}
+                                    onChange={handleCranImageOptionChange}
+                                >
+                                    <option value="default">Default</option>
+                                    <option value="alternative">Alternative</option>
+                                </select>
+                                </div>
+                            )}
 
                         </div>
                         </div>

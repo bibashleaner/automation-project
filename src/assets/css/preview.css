@@ -42,11 +42,11 @@
 
 .close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: ;
+    right: 0.01em;
     background: none;
     border: 5px;
     font-size: 50px;
     cursor: pointer;
-    color: #FFA726;
+    color: #04df3b;
 }

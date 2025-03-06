@@ -95,6 +95,7 @@ export const ImageUploader = ({ onFileSelect, onCroppingChange }) => {
             {/* Only show Cropper when cropping is active */}
             {isCropping ? (
                 <CropImage
+                    type = "reelCrop"
                     imageSrc={selectedImages[currentImageIndex]}
                     onCropDone={handleCropDone}
                 />

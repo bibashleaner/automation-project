@@ -12,10 +12,13 @@ export const Image = () => {
             <h1>Times Berwick</h1>
         </div>
         <Logic
-            // type="Image"
-            // logo={timesLogo}
-            // defaultText="TIMES BERWICK"
+            type="Image"
+            logo={timesLogo}
+            defaultText="TIMES BERWICK"
         />
         </>
     );
 }
+
+
+

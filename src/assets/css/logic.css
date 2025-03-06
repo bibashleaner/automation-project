@@ -131,7 +131,7 @@ h2{
     align-items: flex-end;
     margin-bottom: 2%;
     margin-top: 2%;
-    margin-left: 5%;
+    margin-left: 1.5%;
     margin-right: 5%;
     padding: 0;
 }
@@ -148,7 +148,7 @@ h2{
 
 .buttons{
     display: flex;
-    gap: 4rem;
+    gap: 2.8rem;
     color: white;
     margin-top: 2rem;
 }
@@ -156,12 +156,12 @@ h2{
 .image-container textarea{
     display: flex;
     align-items: flex-end;
-    /* width: 100%;
-    height: 150px; */
-    width: 130%;
+    width: 123%;
     height: 100%;
     resize: none;
     padding: 80px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .download-double-button-icon, .download-icon, .preview-icon, .croped-icon{
@@ -211,17 +211,12 @@ h2{
     cursor: pointer;
 }
 
-.image-container textarea{
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
 .image-container{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin: 0 auto;
-    padding-left: 3em;
+    padding-left: 0.5em;
 }
 
 .image-container h1{
@@ -235,6 +230,13 @@ h2{
     border-radius: 25px;
     font-size: 1.1em;
     color: black;
+}
+
+.cranimage-dropdown{
+    background-color: #007BFF;
+    padding: 2% 4%;
+    border-radius: 25px;
+    font-size: 1.1em;
 }
 
 @media (max-width: 1354px){
