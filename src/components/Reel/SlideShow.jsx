@@ -6,16 +6,16 @@ import '../../assets/css/slideshow.css'
 
 // Define pixel values, not strings with units
 const slideSize = {
-  width: 360,
-  height: 640,
+  width: 270,
+  height: 480,
 };
 
 const divStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  width: "360px",
-  height: "640px",
+  width: "270px",
+  height: "480px",
   backgroundSize: "cover",
   backgroundPosition: "center",
 };
@@ -221,8 +221,8 @@ export const Slideshow = ({ slideImages, template }) => {
         <div 
           className="slide-container"
           style={{
-            width: "360px", 
-            height: "640px",
+            width: "270px", 
+            height: "480px",
             overflow: 'hidden',
             position: 'relative'
           }}
@@ -257,22 +257,10 @@ export const Slideshow = ({ slideImages, template }) => {
         {/* Hidden canvas for video generation */}
         <canvas 
           ref={canvasRef} 
-          width={360} 
-          height={640} 
+          width={270} 
+          height={480} 
           style={{ display: "none" }} 
         />
-        
-        {/* Controls section */}
-        {/* <div className="controls" style={{ marginTop: '15px', textAlign: 'center' }}>
-          {slideImages.length > 1 && mode === "slideshow" && (
-            <button
-              onClick={generateVideo}
-              disabled={isRecording}
-              className={`generate-btn ${isRecording ? "disable" : ""}`}
-            >
-              {isRecording ? `Processing... ${Math.round(progress)}%` : "Generate Video"}
-            </button>
-          )} */}
 
         <div className="controls" style={{ marginTop: '15px', textAlign: 'center' }}>
           {/* Setting controls - only shown in slideshow mode with enough images */}
@@ -287,11 +275,11 @@ export const Slideshow = ({ slideImages, template }) => {
                   style={{ padding: '5px', borderRadius: '4px' }}
                   disabled={isRecording}
                 >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
+                  <option value="1">1x</option>
+                  <option value="2">2x</option>
+                  <option value="3">3x</option>
+                  <option value="4">4x</option>
+                  <option value="5">5x</option>
                 </select>
               </div>
               

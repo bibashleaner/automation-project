@@ -11,7 +11,7 @@ import view from '../icons/view.png'
 import { PreviewModel } from './Preview'
 import { useLocation } from "react-router-dom";
 
-export const Logic = ({type, logo, defaultText}) => {
+export const Logic = ({type, logo, secondLogo, defaultText}) => {
     const [uploadFiles, setUploadFiles] = useState([]);
     const [currentImage, setCurrentImage] = useState(null);
     const [overlayOpacity, setOverlayOpacity] = useState(0.5);
@@ -143,23 +143,209 @@ export const Logic = ({type, logo, defaultText}) => {
         setCranImageOption(e.target.value);
     }
 
+    // const createImageWithOverlay = (file, opacity = overlayOpacity) => {
+    //     const canvas = document.createElement("canvas");
+    //     const context = canvas.getContext("2d");
+
+    //     const image = new Image();
+    //     image.src = file.preview;
+
+    //     canvas.width = 1080;
+    //     canvas.height = 1080;
+
+    //     return new Promise((resolve) => {
+    //         image.onload = () => {
+    //             //set canvas dimension to match the image
+                
+    //             const aspectRatio = image.width / image.height;
+    //             let drawWidth, drawHeight, offsetX, offsetY;
+
+    //             if (aspectRatio > 1) {
+    //                 // Landscape orientation
+    //                 drawWidth = canvas.width;
+    //                 drawHeight = canvas.width / aspectRatio;
+    //                 offsetX = 0;
+    //                 offsetY = (canvas.height - drawHeight) / 2;
+    //             } else {
+    //                 // Portrait orientation or square
+    //                 drawWidth = canvas.height * aspectRatio;
+    //                 drawHeight = canvas.height;
+    //                 offsetX = (canvas.width - drawWidth) / 2;
+    //                 offsetY = 0;
+    //             }
+
+    //             context.clearRect(0, 0, canvas.width, canvas.height); //clear canvas
+
+    //             //Draw the main image
+    //             context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+    //             context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+    //             context.fillRect(0, 0, canvas.width, canvas.height);
+
+    //             if(type === 'cranimage'){
+                    
+    //                 if(cranImageOption === 'alternative'){
+    //                     // Alternative overlay: Draw a left-hand side rectangle with opacity.
+    //                     const rectWidth = canvas.width * 0.2; // 30% of the canvas width
+    //                     // context.fillStyle = "rgba(0, 0, 0, 0.5)"; 
+    //                     context.fillStyle = "rgba(162, 68, 30, 0.5)"; 
+    //                     context.fillRect(0, 0, rectWidth, canvas.height);
+    //                 }else{
+    //                     context.fillStyle = '#bc5125'; // Orange color
+
+    //                     const baseFontSize = Math.max(16, Math.floor(canvas.width * 0.015)); // Approximate base font size
+
+    //                     //Top rectangle 
+    //                     const topLeftHeight = baseFontSize * 9;  
+    //                     const topRightHeight = baseFontSize * 6; 
+
+    //                     context.beginPath();
+    //                     context.moveTo(0, 0); // Start at the top-left corner
+    //                     context.lineTo(canvas.width, 0); // Extend to the top-right corner
+    //                     context.lineTo(canvas.width, topRightHeight); // Move downward (right side height)
+    //                     context.lineTo(0, topLeftHeight); // Move downward (left side height)
+    //                     context.closePath();
+    //                     context.fill();
+
+    //                     //Bottom rectangle 
+    //                     const bottomLeftHeight = baseFontSize * 6; 
+    //                     const bottomRightHeight = baseFontSize * 9; 
+    //                     const bottomY = canvas.height;
+
+    //                     context.beginPath();
+    //                     context.moveTo(0, bottomY); // Start at the bottom-left corner
+    //                     context.lineTo(canvas.width, bottomY); // Extend to the bottom-right corner
+    //                     context.lineTo(canvas.width, bottomY - bottomRightHeight); // Move upward (right side height)
+    //                     context.lineTo(0, bottomY - bottomLeftHeight); // Move upward (left side height)
+    //                     context.closePath();
+    //                     context.fill();
+    //                 }
+    //             }
+
+    //             const logoImage = new Image();
+    //             logoImage.src = logo;
+
+    //             logoImage.onload = () => {
+
+    //                 let logoX, logoY, logoHeight, logoWidth;
+    //                 let computedLogoX;
+
+    //                 if (type === "cranimage") {
+    //                     if (cranImageOption === 'alternative'){
+    //                         logoWidth = canvas.width * 0.35; 
+    //                         logoHeight = canvas.height * 0.35;
+
+    //                         const topRectHeight = canvas.height * 0.10; // Adjust based on your design
+    //                         logoY = topRectHeight - (logoHeight / 2);
+    //                         logoX = 3;
+    //                     }else{
+    //                         logoWidth = canvas.width * 0.35; 
+    //                         logoHeight = canvas.height * 0.35;
+                        
+    //                         const topRectHeight = canvas.height * 0.10; // Adjust based on your design
+    //                         logoX = (canvas.width - logoWidth) / 2; // Center logo horizontally
+    //                         logoY = topRectHeight - (logoHeight / 2);
+    //                         computedLogoX = logoX;
+    //                     }   
+    //                 } else {
+    //                     logoWidth = 250;
+    //                     logoHeight = 220;
+                        
+    //                     logoX = 430; // Default left margin
+    //                     logoY = 40;  // Default top margin
+    //                     computedLogoX = logoX;
+    //                 }
+    //                 context.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
+
+                    
+    //                 if (type === 'cranimage' && cranImageOption === 'default'){
+    //                     //add default text for berwick
+    //                     const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.032)); //scale with the image width
+    //                     context.font = `${defaultFontSize}px DefaultFont`;
+    //                     context.fillStyle = "white";
+    //                     context.textAlign = "center";
+
+    //                     const defaultTextY = canvas.height - defaultFontSize - 10; // 10px margin from bottom
+    //                     context.fillText(defaultText, canvas.width / 2, defaultTextY);
+    //                 }else if (type === "Image"){
+    //                     // add default text for cranbroune
+    //                     const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.022)); //scale with the image width
+    //                     context.font = `${defaultFontSize}px DefaultFont`;
+    //                     context.fillStyle = "white";
+    //                     context.textAlign = "center";
+
+    //                     const defaultTextY = canvas.height - defaultFontSize - 10; // 10px margin from bottom
+    //                     context.fillText(defaultText, canvas.width / 2, defaultTextY);
+    //                 }
+                    
+    //                 //add the caption
+    //                 if (file.caption && file.caption.trim() !== "") {
+
+    //                     const captionFontSize = Math.max(20, Math.floor(canvas.width * 0.070)); //scale with image size
+    //                     context.font = `${captionFontSize}px CaptionFont`;
+    //                     context.fillStyle = "white";
+    //                     // context.textAlign = "center";
+
+    //                     let captionX;
+    //                     // If we're in cranimage alternative mode, align caption to left using computedLogoX.
+    //                     if (type === "cranimage" && cranImageOption === "alternative") {
+    //                         context.textAlign = "left";
+    //                         captionX = 50; // Align the caption with the logo's left position.
+    //                     } else {
+    //                         context.textAlign = "center";
+    //                         captionX = canvas.width / 2;
+    //                     }
+
+    //                     const captionY = canvas.height - (captionFontSize * 2); // Position above default text
+    //                     // context.fillText(file.caption, canvas.width / 2, captionY);
+
+    //                     // **Wrap text logic**
+    //                     // const maxWidth = canvas.width * 0.8; // 80% of canvas width
+    //                     const maxWidth = type === "cranimage" && cranImageOption === "alternative" ? canvas.width - captionX - 10 : canvas.width * 0.8;
+    //                     const wrappedLines = wrapText(context, file.caption, maxWidth, captionFontSize);
+
+    //                     // Draw each line of the wrapped text
+    //                     let currentY;
+    //                     if (type === "cranimage" && cranImageOption === "alternative"){
+    //                         currentY = captionY - (wrappedLines.length - 2.2) * (captionFontSize + 5);
+    //                     }else{
+    //                         currentY = captionY - (wrappedLines.length - 1) * (captionFontSize + 5);
+    //                     }
+
+    //                     const lineIndent = 30; // How many extra pixels you want to shift subsequent lines
+
+    //                     wrappedLines.forEach((line, i) => {
+    //                         // For the first line, no extra indent. For subsequent lines, add an offset.
+    //                         const lineX = i === 0 ? captionX : captionX + lineIndent;
+    //                         context.fillText(line, lineX, currentY);
+    //                         currentY += captionFontSize + 5; // Move down for the next line
+    //                     });
+
+    //                     resolve(canvas.toDataURL("image/png"));
+    //                 }
+    //                 logoImage.onerror = () => resolve(canvas.toDataURL("image/png"));
+    //             }
+    //         }
+    //         image.onerror = () => resolve(file.preview);
+    //     });
+    // };
+
     const createImageWithOverlay = (file, opacity = overlayOpacity) => {
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
-
+    
         const image = new Image();
         image.src = file.preview;
-
+    
         canvas.width = 1080;
         canvas.height = 1080;
-
+    
         return new Promise((resolve) => {
             image.onload = () => {
                 //set canvas dimension to match the image
                 
                 const aspectRatio = image.width / image.height;
                 let drawWidth, drawHeight, offsetX, offsetY;
-
+    
                 if (aspectRatio > 1) {
                     // Landscape orientation
                     drawWidth = canvas.width;
@@ -173,14 +359,14 @@ export const Logic = ({type, logo, defaultText}) => {
                     offsetX = (canvas.width - drawWidth) / 2;
                     offsetY = 0;
                 }
-
+    
                 context.clearRect(0, 0, canvas.width, canvas.height); //clear canvas
-
+    
                 //Draw the main image
                 context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
                 context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
                 context.fillRect(0, 0, canvas.width, canvas.height);
-
+    
                 if(type === 'cranimage'){
                     
                     if(cranImageOption === 'alternative'){
@@ -191,13 +377,13 @@ export const Logic = ({type, logo, defaultText}) => {
                         context.fillRect(0, 0, rectWidth, canvas.height);
                     }else{
                         context.fillStyle = '#bc5125'; // Orange color
-
+    
                         const baseFontSize = Math.max(16, Math.floor(canvas.width * 0.015)); // Approximate base font size
-
+    
                         //Top rectangle 
                         const topLeftHeight = baseFontSize * 9;  
                         const topRightHeight = baseFontSize * 6; 
-
+    
                         context.beginPath();
                         context.moveTo(0, 0); // Start at the top-left corner
                         context.lineTo(canvas.width, 0); // Extend to the top-right corner
@@ -205,12 +391,12 @@ export const Logic = ({type, logo, defaultText}) => {
                         context.lineTo(0, topLeftHeight); // Move downward (left side height)
                         context.closePath();
                         context.fill();
-
+    
                         //Bottom rectangle 
                         const bottomLeftHeight = baseFontSize * 6; 
                         const bottomRightHeight = baseFontSize * 9; 
                         const bottomY = canvas.height;
-
+    
                         context.beginPath();
                         context.moveTo(0, bottomY); // Start at the bottom-left corner
                         context.lineTo(canvas.width, bottomY); // Extend to the bottom-right corner
@@ -220,30 +406,26 @@ export const Logic = ({type, logo, defaultText}) => {
                         context.fill();
                     }
                 }
-                // else{
-                //     //add black overlay with 50% opacity
-                //     context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
-                //     context.fillRect(0, 0, canvas.width, canvas.height);
-                // }
-
+    
                 const logoImage = new Image();
                 logoImage.src = logo;
-
+    
+                // Add a second logo for cranimage alternative mode
+                const secondLogoImage = new Image();
+                secondLogoImage.src = secondLogo; // You need to define/import secondLogo
+    
                 logoImage.onload = () => {
-
                     let logoX, logoY, logoHeight, logoWidth;
                     let computedLogoX;
-
+    
                     if (type === "cranimage") {
                         if (cranImageOption === 'alternative'){
                             logoWidth = canvas.width * 0.35; 
                             logoHeight = canvas.height * 0.35;
-
+    
                             const topRectHeight = canvas.height * 0.10; // Adjust based on your design
-                            // // logoX = (canvas.width - logoWidth) / 50; // Center logo horizontally
                             logoY = topRectHeight - (logoHeight / 2);
                             logoX = 3;
-                            // logoY = 2;
                         }else{
                             logoWidth = canvas.width * 0.35; 
                             logoHeight = canvas.height * 0.35;
@@ -252,10 +434,6 @@ export const Logic = ({type, logo, defaultText}) => {
                             logoX = (canvas.width - logoWidth) / 2; // Center logo horizontally
                             logoY = topRectHeight - (logoHeight / 2);
                             computedLogoX = logoX;
-
-                            // context.lineWidth = 5;  // Set the border width
-                            // context.strokeStyle = "#ffffff"; // Orange color for border (can be adjusted)
-                            // context.strokeRect(logoX, logoY, logoWidth, logoHeight);
                         }   
                     } else {
                         logoWidth = 250;
@@ -267,72 +445,103 @@ export const Logic = ({type, logo, defaultText}) => {
                     }
                     context.drawImage(logoImage, logoX, logoY, logoWidth, logoHeight);
                     
-                    if (type != 'cranimage'){
-                        //add default text
-                        const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.022)); //scale with the image width
-                        context.font = `${defaultFontSize}px DefaultFont`;
-                        context.fillStyle = "white";
-                        context.textAlign = "center";
-
-                        const defaultTextY = canvas.height - defaultFontSize - 10; // 10px margin from bottom
-                        context.fillText(defaultText, canvas.width / 2, defaultTextY);
+                    // Only load and draw the second logo for cranimage alternative
+                    if (type === "cranimage" && cranImageOption === "alternative") {
+                        secondLogoImage.onload = () => {
+                            // Define dimensions for the second logo
+                            const secondLogoWidth = canvas.width * 0.28; // Slightly smaller than first logo
+                            const secondLogoHeight = canvas.height * 0.28;
+                            
+                            // Position at top right
+                            const secondLogoX = canvas.width - secondLogoWidth - 0; // 20px margin from right
+                            const secondLogoY = 0; // 20px margin from top
+                            
+                            // Draw the second logo
+                            context.drawImage(secondLogoImage, secondLogoX, secondLogoY, secondLogoWidth, secondLogoHeight);
+                            
+                            // Continue with the rest of the rendering after second logo is drawn
+                            renderTextAndComplete();
+                        };
+                        
+                        secondLogoImage.onerror = () => {
+                            // If second logo fails to load, continue with the rest of the rendering
+                            renderTextAndComplete();
+                        };
+                    } else {
+                        // For other modes, just continue with the rendering
+                        renderTextAndComplete();
                     }
                     
-                    //add the caption
-                    if (file.caption && file.caption.trim() !== "") {
-
-                        const captionFontSize = Math.max(20, Math.floor(canvas.width * 0.070)); //scale with image size
-                        context.font = `${captionFontSize}px CaptionFont`;
-                        context.fillStyle = "white";
-                        // context.textAlign = "center";
-
-                        let captionX;
-                        // If we're in cranimage alternative mode, align caption to left using computedLogoX.
-                        if (type === "cranimage" && cranImageOption === "alternative") {
-                            context.textAlign = "left";
-                            captionX = 50; // Align the caption with the logo's left position.
-                        } else {
+                    // Function to handle the rest of the rendering after logos
+                    function renderTextAndComplete() {
+                        if (type === 'cranimage' && cranImageOption === 'default'){
+                            //add default text for berwick
+                            const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.032)); //scale with the image width
+                            context.font = `${defaultFontSize}px DefaultFont`;
+                            context.fillStyle = "white";
                             context.textAlign = "center";
-                            captionX = canvas.width / 2;
-                        }
-
-                        const captionY = canvas.height - (captionFontSize * 2); // Position above default text
-                        // context.fillText(file.caption, canvas.width / 2, captionY);
-
-                        // **Wrap text logic**
-                        // const maxWidth = canvas.width * 0.8; // 80% of canvas width
-                        const maxWidth = type === "cranimage" && cranImageOption === "alternative" ? canvas.width - captionX - 10 : canvas.width * 0.8;
-                        const wrappedLines = wrapText(context, file.caption, maxWidth, captionFontSize);
-
-                        // Draw each line of the wrapped text
-                        let currentY;
-                        if (type === "cranimage" && cranImageOption === "alternative"){
-                            currentY = captionY - (wrappedLines.length - 2.2) * (captionFontSize + 5);
-                        }else{
-                            currentY = captionY - (wrappedLines.length - 1) * (captionFontSize + 5);
+    
+                            const defaultTextY = canvas.height - defaultFontSize - 10; // 10px margin from bottom
+                            context.fillText(defaultText, canvas.width / 2, defaultTextY);
+                        }else if (type === "Image"){
+                            // add default text for cranbroune
+                            const defaultFontSize = Math.max(18, Math.floor(canvas.width * 0.022)); //scale with the image width
+                            context.font = `${defaultFontSize}px DefaultFont`;
+                            context.fillStyle = "white";
+                            context.textAlign = "center";
+    
+                            const defaultTextY = canvas.height - defaultFontSize - 10; // 10px margin from bottom
+                            context.fillText(defaultText, canvas.width / 2, defaultTextY);
                         }
                         
-                        // for (const line of wrappedLines) {
-                        //     // context.fillText(line, canvas.width / 2, currentY); 
-                        //     context.fillText(line, captionX, currentY); 
-                        //     currentY += captionFontSize + 5; // Line height
-                        // }
-
-                        const lineIndent = 30; // How many extra pixels you want to shift subsequent lines
-
-                        wrappedLines.forEach((line, i) => {
-                            // For the first line, no extra indent. For subsequent lines, add an offset.
-                            const lineX = i === 0 ? captionX : captionX + lineIndent;
-                            context.fillText(line, lineX, currentY);
-                            currentY += captionFontSize + 5; // Move down for the next line
-                        });
-
-                        resolve(canvas.toDataURL("image/png"));
-                        console.log(wrappedLines);
+                        //add the caption
+                        if (file.caption && file.caption.trim() !== "") {
+                            const captionFontSize = Math.max(20, Math.floor(canvas.width * 0.070)); //scale with image size
+                            context.font = `${captionFontSize}px CaptionFont`;
+                            context.fillStyle = "white";
+                            
+                            let captionX;
+                            // If we're in cranimage alternative mode, align caption to left using computedLogoX.
+                            if (type === "cranimage" && cranImageOption === "alternative") {
+                                context.textAlign = "left";
+                                captionX = 50; // Align the caption with the logo's left position.
+                            } else {
+                                context.textAlign = "center";
+                                captionX = canvas.width / 2;
+                            }
+    
+                            const captionY = canvas.height - (captionFontSize * 2); // Position above default text
+                            
+                            // **Wrap text logic**
+                            const maxWidth = type === "cranimage" && cranImageOption === "alternative" ? canvas.width - captionX - 10 : canvas.width * 0.8;
+                            const wrappedLines = wrapText(context, file.caption, maxWidth, captionFontSize);
+    
+                            // Draw each line of the wrapped text
+                            let currentY;
+                            if (type === "cranimage" && cranImageOption === "alternative"){
+                                currentY = captionY - (wrappedLines.length - 2.2) * (captionFontSize + 5);
+                            }else{
+                                currentY = captionY - (wrappedLines.length - 1) * (captionFontSize + 5);
+                            }
+    
+                            const lineIndent = 30; // How many extra pixels you want to shift subsequent lines
+    
+                            wrappedLines.forEach((line, i) => {
+                                // For the first line, no extra indent. For subsequent lines, add an offset.
+                                const lineX = i === 0 ? captionX : captionX + lineIndent;
+                                context.fillText(line, lineX, currentY);
+                                currentY += captionFontSize + 5; // Move down for the next line
+                            });
+    
+                            resolve(canvas.toDataURL("image/png"));
+                        } else {
+                            resolve(canvas.toDataURL("image/png"));
+                        }
                     }
-                    logoImage.onerror = () => resolve(canvas.toDataURL("image/png"));
-                }
-            }
+                };
+                
+                logoImage.onerror = () => resolve(file.preview);
+            };
             image.onerror = () => resolve(file.preview);
         });
     };
@@ -497,7 +706,7 @@ export const Logic = ({type, logo, defaultText}) => {
                             {type === "cranimage" && (
                                 <div className="cranimage-dropdown">
                                 <label htmlFor={`cranimage-dropdown-${index}`}>
-                                    Template:
+                                    Template
                                 </label>
                                 <select
                                     id={`cranimage-dropdown-${index}`}

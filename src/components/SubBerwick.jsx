@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import timesLogo from '../assets/pictures/timesLogo.png'
+// import timesLogo from '../assets/pictures/timesLogo.png'
 import '../assets/css/subberwick.css'
 
 export const SubBerwick = () =>{
