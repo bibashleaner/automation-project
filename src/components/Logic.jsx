@@ -178,10 +178,11 @@ export const Logic = ({type, logo, defaultText}) => {
 
                 //Draw the main image
                 context.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+                context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
+                context.fillRect(0, 0, canvas.width, canvas.height);
 
                 if(type === 'cranimage'){
-                    context.fillStyle = `rgba(0, 0, 0, ${opacity})`;
-                    context.fillRect(0, 0, canvas.width, canvas.height);
+                    
                     if(cranImageOption === 'alternative'){
                         // Alternative overlay: Draw a left-hand side rectangle with opacity.
                         const rectWidth = canvas.width * 0.2; // 30% of the canvas width
@@ -480,8 +481,7 @@ export const Logic = ({type, logo, defaultText}) => {
                                 Download
                             </button>
 
-                            {type == "cranimage" && (
-                                <div className="opacity-slider">
+                            <div className="opacity-slider">
                                 <label htmlFor={`opacity-${index}`}>Set Opacity: <span>{((uploadFiles[index]?.overlayOpacity || 0) * 100).toFixed(0)}%</span>{/*<span>{(uploadFiles[index].overlayOpacity * 100).toFixed(0)}%</span>*/}</label>
                                 <input
                                     id={`opacity-${index}`}
@@ -493,7 +493,6 @@ export const Logic = ({type, logo, defaultText}) => {
                                     onChange={(e) => handleOverlayOpacityChange(e, index)}
                                 />                               
                             </div>
-                            )}
 
                             {type === "cranimage" && (
                                 <div className="cranimage-dropdown">
