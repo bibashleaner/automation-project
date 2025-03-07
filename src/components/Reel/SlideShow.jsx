@@ -28,7 +28,7 @@ export const Slideshow = ({ slideImages, template }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [progress, setProgress] = useState(0);
   const [mode, setMode] = useState("slideshow");
-  const [transitionDuration, setTransitionDuratin] = useState(2);
+  const [transitionDuration, setTransitionDuration] = useState(2);
 
   // Improved easing function for smoother transitions
   const easeInOutCubic = (t) => {
@@ -183,7 +183,7 @@ export const Slideshow = ({ slideImages, template }) => {
     mediaRecorder.start();
 
     const fps = 60;
-    const secondsPerTransition = 2;
+    const secondsPerTransition = transitionDuration;
     const framesPerTransition = fps * secondsPerTransition;
     let currentFrame = 0;
     const totalFrames = (slideImages.length - 1) * framesPerTransition;
@@ -210,10 +210,10 @@ export const Slideshow = ({ slideImages, template }) => {
     requestAnimationFrame(renderFrame);
   };
 
-  // // Handle transition duration change
-  // const handleDurationChange = (e) => {
-  //   setTransitionDuration(parseFloat(e.target.value));
-  // };
+  // Handle transition duration change
+  const handleDurationChange = (e) => {
+    setTransitionDuration(parseFloat(e.target.value));
+  };
 
   return (
       <div className="slideshow-wrapper">
@@ -231,7 +231,13 @@ export const Slideshow = ({ slideImages, template }) => {
           {mode === "slideshow" && (
             <>
               {slideImages.length > 0 && (
-                <AnimationComponent autoplay={true} transitionDuration={500} duration={2000} arrows={false}>
+                <AnimationComponent 
+                  key={transitionDuration}
+                  autoplay={true} 
+                  transitionDuration={500} 
+                  duration={transitionDuration * 1000} 
+                  arrows={true}
+                >
                   {slideImages.map((image, index) => (
                     <div key={index} style={{...divStyle, backgroundImage: `url(${image.url})` }}></div>
                   ))}
@@ -257,8 +263,7 @@ export const Slideshow = ({ slideImages, template }) => {
         />
         
         {/* Controls section */}
-        <div className="controls" style={{ marginTop: '15px', textAlign: 'center' }}>
-          {/* Generate Video button - only shown in slideshow mode when there are enough images */}
+        {/* <div className="controls" style={{ marginTop: '15px', textAlign: 'center' }}>
           {slideImages.length > 1 && mode === "slideshow" && (
             <button
               onClick={generateVideo}
@@ -267,6 +272,38 @@ export const Slideshow = ({ slideImages, template }) => {
             >
               {isRecording ? `Processing... ${Math.round(progress)}%` : "Generate Video"}
             </button>
+          )} */}
+
+        <div className="controls" style={{ marginTop: '15px', textAlign: 'center' }}>
+          {/* Setting controls - only shown in slideshow mode with enough images */}
+          {slideImages.length > 1 && mode === "slideshow" && (
+            <div className="settings-container" style={{ marginBottom: '15px' }}>
+              <div className="duration-control">
+                <label htmlFor="transition-duration">Duration:</label>
+                <select 
+                  id="transition-duration" 
+                  value={transitionDuration} 
+                  onChange={handleDurationChange}
+                  style={{ padding: '5px', borderRadius: '4px' }}
+                  disabled={isRecording}
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              
+              <button
+                onClick={generateVideo}
+                disabled={isRecording}
+                className={`generate-btn ${isRecording ? "disable" : ""}`}
+                style={{ padding: '8px 16px', borderRadius: '4px', cursor: isRecording ? 'not-allowed' : 'pointer' }}
+              >
+                {isRecording ? `Processing... ${Math.round(progress)}%` : "Generate Video"}
+              </button>
+            </div>
           )}
           
           {/* Download Video button - only shown in video mode when video URL exists */}

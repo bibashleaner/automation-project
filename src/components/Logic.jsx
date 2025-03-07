@@ -416,11 +416,11 @@ export const Logic = ({type, logo, defaultText}) => {
                     <div className="uploadArea">
                         <img src={upload} alt="upload" />
                         <h3>Drag and Drop here</h3>
-                    <h3>or</h3>
-                    <button onClick={() => document.getElementById("fileuploaded").click()}>
-                        select files
-                    </button>
-                    <input id="fileuploaded" type="file" style={{display: "none"}} multiple onChange={handleFileEvent} />
+                        <h3>or</h3>
+                        <button onClick={() => document.getElementById("fileuploaded").click()}>
+                            select files
+                        </button>
+                        <input id="fileuploaded" type="file" style={{display: "none"}} multiple onChange={handleFileEvent} />
                     </div>
 
                 </div>

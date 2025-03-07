@@ -104,7 +104,7 @@ export const ImageUploader = ({ onFileSelect, onCroppingChange }) => {
                     {/* Image Upload UI (visible when cropping is not active) */}
                     <div className="add-image-container">
                         <h1>Add Images</h1>
-                        <button onClick={() => document.getElementById("image").click()}>
+                        <button onClick={() => document.getElementById("image").click()} className="reelSelectFiles">
                             Select files
                         </button>
                         <input

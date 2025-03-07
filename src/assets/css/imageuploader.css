@@ -19,7 +19,7 @@
     margin-bottom: 1em;
 }
 
-button{
+.reelSelectFiles{
     display: flex;
     flex-direction: row;
     margin-left: 39%;
