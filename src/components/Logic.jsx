@@ -437,7 +437,7 @@ export const Logic = ({type, logo, secondLogo, defaultText}) => {
                         }   
                     } else {
                         logoWidth = 250;
-                        logoHeight = 220;
+                        logoHeight = 250;
                         
                         logoX = 430; // Default left margin
                         logoY = 40;  // Default top margin
