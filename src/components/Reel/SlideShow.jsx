@@ -236,7 +236,7 @@ export const Slideshow = ({ slideImages, template }) => {
                   autoplay={true} 
                   transitionDuration={500} 
                   duration={transitionDuration * 1000} 
-                  arrows={true}
+                  arrows={false}
                 >
                   {slideImages.map((image, index) => (
                     <div key={index} style={{...divStyle, backgroundImage: `url(${image.url})` }}></div>
@@ -304,3 +304,6 @@ export const Slideshow = ({ slideImages, template }) => {
       </div>
   );
 };
+
+
+
